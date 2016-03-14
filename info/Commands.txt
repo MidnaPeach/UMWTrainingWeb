@@ -1,0 +1,32 @@
+Commands
+
+#For starting postgres and logging in as localhost:
+
+sudo service postgresql start
+psql -U postgres -h localhost
+
+#password is "cats123"
+
+#For accessing our website's database:
+\c umw_training;
+
+#website's role for login:
+#user = website, password = umw16p91V2Hkl8m9
+
+#needed for after we add postgres to AWS (adds ability to hash passwords):
+#info found at: https://www.youtube.com/watch?v=c-gFZ71CjUw&index=10&list=PLuZfoSIficQvVN44F1emhKAF-1KIoRcok
+#about 15 min in... though the whole thing is useful
+
+sudo apt-get update
+sudo apt-get install postgresql-contrib-9.3
+
+#While in the database you want hashing to take place:
+create extension pgcrypto; 
+
+#adding a new user with password encrypted:
+insert into users values ('ggreene', crypt('hispassword', gen_salt('bf')));
+select * from users;
+
+#when user logs in website checks if password is goood:
+select * from users where password = crypt('hispassword', password) and username = 'ggreene';
+
