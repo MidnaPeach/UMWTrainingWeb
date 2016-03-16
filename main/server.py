@@ -1,3 +1,6 @@
+
+#this is the file that starts the server and has all of the server commands in it
+
 import psycopg2
 import psycopg2.extras
 import os
@@ -11,7 +14,7 @@ loginError = False
 verifiedUser = ''
 userType = ''
 
-
+#connectToDB--------------------------------------------------------------------------------------------
 def connectToDB():
     connectionString = 'dbname=umw_training user=website password=umw16p91V2Hkl8m9 host=localhost'
     print connectionString
@@ -21,7 +24,11 @@ def connectToDB():
         return psycopg2.connect(connectionString)
     except:
         print("Can't connect to database")
+#end connect to DB---------------------------------------------------------------------------------------
 
+
+
+#login---------------------------------------------------------------------------------------------------    
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if 'loginError' in session:
@@ -67,10 +74,12 @@ def login():
          session['loginError'] = True
          loginError = session['loginError']
     return render_template('index.html', user = verifiedUser, loginError = loginError)
-    
-    
+
     #return render_template('index.html')
-    
+#end login----------------------------------------------------------------------------------------------------
+
+
+#main Index---------------------------------------------------------------------------------------------------    
 @app.route('/home', methods=['GET', 'POST'])
 def mainIndex():
     if 'username' in session:
@@ -107,7 +116,20 @@ def mainIndex():
       else:
          verifiedUser = ''
          session['username'] = ''
-    return render_template('Theme/index.html', user = verifiedUser, userType = userType)
+    return render_template('Theme/home.html', user = verifiedUser, userType = userType)
+#end mainIndex------------------------------------------------------------------------------------------------------------------------    
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+#keep this at the bottom. We think it starts the server    
 if __name__ == '__main__':
     app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug = True)
