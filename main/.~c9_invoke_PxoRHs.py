@@ -72,7 +72,7 @@ def login():
          verifiedUser = ''
          session['username'] = ''
          session['loginError'] = True
-         loginError = session['loginError']
+#end login
     return render_template('index.html', user = verifiedUser, loginError = loginError)
 
     #return render_template('index.html')
@@ -102,49 +102,24 @@ def mainIndex():
     cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     # if user typed in a post ...
     if request.method == 'POST':
-        print "HI"
-        session['username'] = request.form['username']
-        print(session['username'])
+      print "HI"
+      session['username'] = request.form['username']
+      print(session['username'])
 
-        pw = request.form['pw']
-        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
-        print query
-        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
-        if cur.fetchone():
-            verifiedUser = session['username']
-            return redirect(url_for('mainIndex'))
-        else:
-            verifiedUser = ''
-            session['username'] = ''
-            
-    if userType == 'student':
-        # getting the user's first and last name(only students)
-        cur.execute("select first_name, last_name from students WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
-        names=cur.fetchall()
-        print(names)
-    
-    if userType == 'admin':
-        # getting the user's first and last name(only admins)
-        cur.execute("select first_name, last_name from admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
-        names=cur.fetchall()
-        print(names)
-        
-    # THIS IS EXACTLY WHAT ZACHARSKI HAS IN ONE OF HIS VIDEOS!!!!! #
-    # IDK WHY IT HATES ME!!!!! #
-    # I can't see what it's printing... can you stop the server so I can start it on my side?
-    # I think I stopped it... cool yeah.. we need a chat on here.
-    # LOLS
-    # it was the comma after 
-    # OMG I HATE EVERYTHING!!!!!
-    # WE GOT THE NAMES PRINTING ;)
-    # YAAAAAY TEAM WORK!!!!!
-    #:D Yipeeeeeeeee!
-    # how did you get rid of the brackets that were there at first?
-    # what brackets?
-
-    
-    #user and userType are being passed to the website here
-    return render_template('Theme/home.html', user = verifiedUser, userType = userType, Name = names)
+      pw = request.form['pw']
+      query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+      print query
+      cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+      if cur.fetchone():
+         verifiedUser = session['username']
+         return redirect(url_for('mainIndex'))
+      else:
+         verifiedUser = ''
+         session['username'] = ''
+      # getting the user's first and last name
+      
+      #user and userType are being passed to the website here
+    return render_template('Theme/home.html', user = verifiedUser, userType = userType, firstName = "Brittany", lastName = "Raze")
 #end mainIndex------------------------------------------------------------------------------------------------------------------------    
     
     
