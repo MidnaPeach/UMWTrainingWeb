@@ -116,7 +116,9 @@ def mainIndex():
       else:
          verifiedUser = ''
          session['username'] = ''
-    return render_template('Theme/home.html', user = verifiedUser, userType = userType)
+      # getting the user's first and last name
+      #user and userType are being passed to the website here
+    return render_template('Theme/home.html', user = verifiedUser, userType = userType, firstName = "Brittany", lastName = "Raze")
 #end mainIndex------------------------------------------------------------------------------------------------------------------------    
     
     
