@@ -9,7 +9,7 @@
     <meta name="author" content="Dashboard">
     <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
 
-    <!-- This is what appears on the websites tab -->
+    <!-- This is what appears on the website's tab -->
     <title>UMW Training Program</title>
 
     <!-- Bootstrap core CSS -->
@@ -208,7 +208,7 @@
               <ul class="sidebar-menu" id="nav-accordion">
               
                   <!--THIS IS WHERE THE EAGLE PICTURE GOES-->
-              	  <p class="centered"><a href="profile.html"><img src="static/img/Eagle Picture.jpg" class="img-circle" width="100"></a></p>
+              	  <p class="centered"><a href="/home"><img src="static/img/Eagle Picture.jpg" class="img-circle" width="100"></a></p>
               	  
               	  <!--THIS IS WHERE THE USER'S NAME GOES-->
               	  {% for name in Name %}
@@ -216,9 +216,9 @@
               	  {% endfor %}
               	  	
                   <li class="mt">
-                      <a class="active" href="index.html">
+                      <a class="active" href="/home">
                           <i class="fa fa-dashboard"></i>
-                          <span>Dashboard</span>
+                          <span>Homepage</span>
                       </a>
                   </li>
 
@@ -695,8 +695,9 @@
 
     <!--script for this page-->
     <script src="static/js/sparkline-chart.js"></script>    
-	<script src="static/js/zabuto_calendar.js"></script>	
-	<!--
+	<script src="static/js/zabuto_calendar.js"></script>
+	
+	<!-- THIS IS THE ANNOYING POP UP...DO NOT UNCOMMENT UNLESS WE WANT A POPUP!!!!!
 	<script type="text/javascript">
         $(document).ready(function () {
         var unique_id = $.gritter.add({
@@ -713,11 +714,11 @@
             // (string | optional) the class name you want to apply to that specific message
             class_name: 'my-sticky-class'
         });
-        -->
          
         return false;
         });
 	</script>
+	-->
 	
 	<script type="application/javascript">
         $(document).ready(function () {
