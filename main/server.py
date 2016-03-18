@@ -129,8 +129,8 @@ def adminHome():
 #end adminHome------------------------------------------------------------------------------------------------------------------------ 
 
 #admin calendar page------------------------------------------------------    
-@app.route('/calendar', methods=['GET', 'POST'])
-def calendarPage():
+@app.route('/acalendar', methods=['GET', 'POST'])
+def adminCalendarPage():
     if 'username' in session:
         verifiedUser = session['username']
     else:
@@ -173,7 +173,7 @@ def calendarPage():
         print(names)
         
     #user and userType are being passed to the website here
-    return render_template('Theme/calendar.html', user = verifiedUser, userType = userType, Name = names)
+    return render_template('Theme/acalendar.html', user = verifiedUser, userType = userType, Name = names)
 #end admin calendar page--------------------------------------------------     
     
 #student home---------------------------------------------------------------------------------------------------
@@ -224,7 +224,53 @@ def studentHome():
     return render_template('Theme/shome.html', user = verifiedUser, userType = userType, Name = names)
 #end studentHome------------------------------------------------------------------------------------------------------------------------    
     
+#student home---------------------------------------------------------------------------------------------------
+@app.route('/scalendar', methods=['GET', 'POST'])
+def studentCalendarPage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    if verifiedUser == '':
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    # if user typed in a post ...
+    if request.method == 'POST':
+        print "HI"
+        session['username'] = request.form['username']
+        print(session['username'])
+
+        pw = request.form['pw']
+        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        print query
+        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        if cur.fetchone():
+            verifiedUser = session['username']
+            return redirect(url_for('studentHome'))
+        else:
+            verifiedUser = ''
+            session['username'] = ''
+            
+    if userType == 'student':
+        # getting the user's first and last name(only students)
+        cur.execute("select first_name, last_name from students WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        names=cur.fetchall()
+        print(names)
     
+    #user and userType are being passed to the website here
+    return render_template('Theme/scalendar.html', user = verifiedUser, userType = userType, Name = names)
+#end studentHome------------------------------------------------------------    
     
     
     
