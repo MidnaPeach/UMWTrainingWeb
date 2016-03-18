@@ -1,4 +1,3 @@
-
 -- use "\i /umw_training/umw_training.sql" to reset all changes and reload this database. 
 -- This is after logging in to postgres as "localhost" like normal.
 -- After doing this insert the password for the website user "umw16p91V2Hkl8m9"

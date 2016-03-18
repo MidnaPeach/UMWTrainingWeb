@@ -21,7 +21,9 @@
 @media (max-width: 768px) {
 
     .header {
-        position: absolute;
+        
+        max-width: 775px;
+        margin-right: 0px;
     }
 
     /*sidebar*/
@@ -29,7 +31,7 @@
     #sidebar {
         height: auto;
         overflow: hidden;
-        position: absolute;
+        
         width: 100%;
         z-index: 1001;
     }
@@ -38,7 +40,10 @@
     /* body container */
     #main-content {
         margin: 0px!important;
-        position: none !important;
+        margin-right: 0px;
+        padding-right: 0px!important;
+        width:100%;
+        position: absolute !important;
     }
 
     #sidebar > ul > li > a > span {
@@ -90,7 +95,7 @@
     }
 
     #sidebar .btn-navbar .arrow {
-        position: absolute;
+        
         right: 35px;
         width: 0;
         height: 0;
@@ -115,7 +120,7 @@
     /* full calendar fix */
     .fc-header-right {
         left:25px;
-        position: absolute;
+        
     }
 
     .fc-header-left .fc-button {
@@ -199,9 +204,9 @@
 
     /*--*/
 
-    /*.chart-position {*/
-        /*margin-top: 0px;*/
-    /*}*/
+    .chart-position {
+        margin-top: 0px;
+    }
 
     .stepy-titles li {
         margin: 10px 3px;
@@ -234,6 +239,8 @@
 
     .notify-row, .search, .dont-show , .inbox-head .sr-input, .inbox-head .sr-btn{
         display: none;
+        margin-right: 0px;
+        padding-right: 0px;
     }
 
     #top_menu .nav > li, ul.top-menu > li {
@@ -261,6 +268,8 @@
 
     .notify-row, .search, .dont-show, .inbox-head .sr-input, .inbox-head .sr-btn {
         display: none;
+        margin-right: 0px;
+        padding-right: 0px;
     }
 
     #top_menu .nav > li, ul.top-menu > li {
@@ -277,8 +286,11 @@
 
     .lock-wrapper {
         margin: 10% auto;
-        max-width: 310px;
+        margin-right: 0px;
+        padding-right: 0px;
+        max-width: 775px;
     }
+    
     .lock-input {
         width: 82%;
     }

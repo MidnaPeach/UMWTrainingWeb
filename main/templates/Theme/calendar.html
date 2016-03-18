@@ -1,3 +1,5 @@
+<!-- This is a test calendar -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,18 +9,23 @@
     <meta name="author" content="Dashboard">
     <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
 
-    <title>DASHGUM - Bootstrap Admin Template</title>
+    <!-- This is what appears on the websites tab -->
+    <title>UMW Training Program</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="assets/css/bootstrap.css" rel="stylesheet">
+    <link href="static/css/bootstrap.css" rel="stylesheet">
     <!--external css-->
-    <link href="assets/font-awesome/css/font-awesome.css" rel="stylesheet" />
-    <link href="assets/js/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
-        
+    <link href="static/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="static/css/zabuto_calendar.css">
+    <!--<link rel="stylesheet" type="text/css" href="static/js/gritter/css/jquery.gritter.css" />-->
+    <link rel="stylesheet" type="text/css" href="static/lineicons/style.css">    
+    
     <!-- Custom styles for this template -->
-    <link href="assets/css/style.css" rel="stylesheet">
-    <link href="assets/css/style-responsive.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
+    <link href="static/css/style-responsive.css" rel="stylesheet">
 
+    <script src="static/js/chart-master/Chart.js"></script>
+    
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -33,18 +40,26 @@
       TOP BAR CONTENT & NOTIFICATIONS
       *********************************************************************************************************************************************************** -->
       <!--header start-->
+     
       <header class="header black-bg">
+          <div style="width: auto; background: #082749; background:linear-gradient(#082749, #092D54);"> <!-- or ... -image: url(static/img/background_grey.jpg) or... #092D54-->
+              
+              <center>
+                  <img alt="avatar" class="resize" src="static/img/UMW Banner.png">
+              </center>
+          </div>    
+          <div style="padding: 0 15px; height:55px; overflow: hidden; max-height: 55px;">
               <div class="sidebar-toggle-box">
                   <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
               </div>
             <!--logo start-->
-            <a href="index.html" class="logo"><b>DASHGUM FREE</b></a>
+            <a href="/ahome" class="logo">UMW Training Program</a>
             <!--logo end-->
-            <div class="nav notify-row" id="top_menu">
+    <!--        <div class="nav notify-row" id="top_menu">
                 <!--  notification start -->
-                <ul class="nav top-menu">
+    <!--            <ul class="nav top-menu">
                     <!-- settings start -->
-                    <li class="dropdown">
+    <!--                <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
                             <i class="fa fa-tasks"></i>
                             <span class="badge bg-theme">4</span>
@@ -113,7 +128,7 @@
                     </li>
                     <!-- settings end -->
                     <!-- inbox dropdown start-->
-                    <li id="header_inbox_bar" class="dropdown">
+    <!--                <li id="header_inbox_bar" class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="index.html#">
                             <i class="fa fa-envelope-o"></i>
                             <span class="badge bg-theme">5</span>
@@ -125,7 +140,7 @@
                             </li>
                             <li>
                                 <a href="index.html#">
-                                    <span class="photo"><img alt="avatar" src="assets/img/ui-zac.jpg"></span>
+                                    <span class="photo"><img alt="avatar" src="static/img/ui-zac.jpg"></span>
                                     <span class="subject">
                                     <span class="from">Zac Snider</span>
                                     <span class="time">Just now</span>
@@ -137,7 +152,7 @@
                             </li>
                             <li>
                                 <a href="index.html#">
-                                    <span class="photo"><img alt="avatar" src="assets/img/ui-divya.jpg"></span>
+                                    <span class="photo"><img alt="avatar" src="static/img/ui-divya.jpg"></span>
                                     <span class="subject">
                                     <span class="from">Divya Manian</span>
                                     <span class="time">40 mins.</span>
@@ -149,7 +164,7 @@
                             </li>
                             <li>
                                 <a href="index.html#">
-                                    <span class="photo"><img alt="avatar" src="assets/img/ui-danro.jpg"></span>
+                                    <span class="photo"><img alt="avatar" src="static/img/ui-danro.jpg"></span>
                                     <span class="subject">
                                     <span class="from">Dan Rogers</span>
                                     <span class="time">2 hrs.</span>
@@ -161,7 +176,7 @@
                             </li>
                             <li>
                                 <a href="index.html#">
-                                    <span class="photo"><img alt="avatar" src="assets/img/ui-sherman.jpg"></span>
+                                    <span class="photo"><img alt="avatar" src="static/img/ui-sherman.jpg"></span>
                                     <span class="subject">
                                     <span class="from">Dj Sherman</span>
                                     <span class="time">4 hrs.</span>
@@ -177,14 +192,20 @@
                         </ul>
                     </li>
                     <!-- inbox dropdown end -->
-                </ul>
+    <!--            </ul>
                 <!--  notification end -->
-            </div>
+    <!--        </div> -->
             <div class="top-menu">
+                <ul class="nav pull-right top-menu">    
+            	    <li><a class="logout" name = logout href="/">Logout</a></li>
+            	</ul> 
             	<ul class="nav pull-right top-menu">
-                    <li><a class="logout" href="login.html">Logout</a></li>
+            	    <li style="width: auto; padding: 0px 10px; margin-top: 10px; color:#FFF;  border-right: 1px solid #a1c5e4 !important; border-left: 1px solid #a1c5e4 !important;"><p></p>Username: {{user}}</p></li>
+            	    
+            	    <li style="width: auto; padding: 0px 10px; margin-top: 10px; color:#FFF;  border-right: 1px solid #a1c5e4 !important; margin-right: 30px;"><p></p>Login Type: {{userType}}</p></li>
             	</ul>
             </div>
+          </div>
         </header>
       <!--header end-->
       
@@ -197,35 +218,35 @@
               <!-- sidebar menu start-->
               <ul class="sidebar-menu" id="nav-accordion">
               
-              	  <p class="centered"><a href="profile.html"><img src="assets/img/ui-sam.jpg" class="img-circle" width="60"></a></p>
-              	  <h5 class="centered">Marcel Newman</h5>
+                  <!--THIS IS WHERE THE EAGLE PICTURE GOES-->
+              	  <p class="centered"><a href="/ahome"><img src="static/img/Eagle Picture.jpg" class="img-circle" width="100"></a></p>
+              	  
+              	  <!--THIS IS WHERE THE USER'S NAME GOES-->
+              	  {% for name in Name %}
+              	  <h5 class="centered">{{name[0]}} {{name[1]}}</h5>
+              	  {% endfor %}
               	  	
                   <li class="mt">
-                      <a href="index.html">
-                          <i class="fa fa-dashboard"></i>
-                          <span>Dashboard</span>
+                      <a class="active" href="/ahome">
+                          <i class="fa fa-home"></i>
+                          <span>Homepage</span>
+                      </a>
+                  </li>
+
+                  <li class="mt">
+                      <a class="active" href="/calendar" >
+                          <i class="fa fa-desktop"></i>
+                          <span>Calendar</span>
                       </a>
                   </li>
 
                   <li class="sub-menu">
                       <a href="javascript:;" >
-                          <i class="fa fa-desktop"></i>
-                          <span>UI Elements</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  href="general.html">General</a></li>
-                          <li><a  href="buttons.html">Buttons</a></li>
-                          <li><a  href="panels.html">Panels</a></li>
-                      </ul>
-                  </li>
-
-                  <li class="sub-menu">
-                      <a class="active" href="javascript:;" >
                           <i class="fa fa-cogs"></i>
                           <span>Components</span>
                       </a>
                       <ul class="sub">
-                          <li class="active"><a  href="calendar.html">Calendar</a></li>
+                          <li><a  href="calendar.html">Calendar</a></li>
                           <li><a  href="gallery.html">Gallery</a></li>
                           <li><a  href="todo_list.html">Todo List</a></li>
                       </ul>
@@ -285,6 +306,84 @@
           <section class="wrapper">
           	<h3><i class="fa fa-angle-right"></i> Calendar</h3>
               <!-- page start-->
+              <!-- Calendar from ahome.html 
+              <div id="calendar" class="mb">
+                  <div class="panel green-panel no-margin">
+                      <div class="panel-body">
+                          <div id="date-popover" class="popover top" style="cursor: pointer; disadding: block; margin-left: 175px; margin-top: -50px; width: 175px;">
+                              <div class="arrow"></div>
+                              <h3 class="popover-title" style="disadding: none;"></h3>
+                              <div id="date-popover-content" class="popover-content"></div>
+                          </div>
+                          <div id="my-calendar"></div>
+                      </div>
+                  </div>
+              </div><!-- / calendar -->
+              <!-- Calendar made from a table -->
+              <table width="75%" border="1" cellspacing="1" cellpadding="1"> 
+              <thead>
+              <tr>
+                  <td colspan="7" align=center style="color: gray; background-color: navy"><b>March 2016</b></td> 
+              </tr>
+              <tr> 
+                  <th style="text-align: center">Sun</th>
+                  <th style="text-align: center">Mon</th>
+                  <th style="text-align: center">Tue</th>
+                  <th style="text-align: center">Wed</th>
+                  <th style="text-align: center">Thu</th>
+                  <th style="text-align: center">Fri</th>
+                  <th style="text-align: center">Sat</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr> 
+                  <td align="left"></td>
+                  <td align="left"></td>
+                  <td align="left">1</td>
+                  <td align="left">2</td>
+                  <td align="left">3</td>
+                  <td align="left">4</td>
+                  <td align="left">5</td>
+              </tr>
+              <tr> 
+                  <td align="left">6</td>
+                  <td align="left">7</td>
+                  <td align="left">8</td>
+                  <td align="left">9</td>
+                  <td align="left">10</td>
+                  <td align="left">11</td>
+                  <td align="left">12</td>
+              </tr>
+              <tr> 
+                  <td align="left">13</td>
+                  <td align="left">14</td>
+                  <td align="left">15</td>
+                  <td align="left">16</td>
+                  <td align="left">17</td>
+                  <td align="left">18</td>
+                  <td align="left">19</td>
+              </tr>
+              <tr> 
+                  <td align="left">20</td>
+                  <td align="left">21</td>
+                  <td align="left">22</td>
+                  <td align="left">23</td>
+                  <td align="left">24</td>
+                  <td align="left">25</td>
+                  <td align="left">26</td>
+              </tr>
+              <tr> 
+                  <td align="left">27</td>
+                  <td align="left">28</td>
+                  <td align="left">29</td>
+                  <td align="left">30</td>
+                  <td align="left">31</td>
+                  <td align="left"></td>
+                  <td align="left"></td>
+              </tr>
+              </tbody>
+              </table>
+             
               <div class="row mt">
                   <aside class="col-lg-3 mt">
                       <h4><i class="fa fa-angle-right"></i> Draggable Events</h4>
