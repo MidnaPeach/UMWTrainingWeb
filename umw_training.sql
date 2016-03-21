@@ -1,6 +1,9 @@
 -- use "\i /umw_training/umw_training.sql" to reset all changes and reload this database. 
--- This is after logging in to postgres as "localhost" like normal.
--- After doing this insert the password for the website user "umw16p91V2Hkl8m9"
+-- This is after logging in to postgres as "localhost" like normal. 
+      --sudo service postgresql start
+      --psql -U postgres -h localhost
+      --password : cats123
+-- After all of the create table and grant thing, doing this insert the password for the website user "umw16p91V2Hkl8m9"
 
 DROP DATABASE IF EXISTS umw_training;
 CREATE DATABASE umw_training;
@@ -20,6 +23,7 @@ create extension pgcrypto;
 INSERT INTO users (user_name, password) VALUES
 ('mpokorny', crypt('p00d13', gen_salt('bf'))),
 ('aperkins', crypt('changeme', gen_salt('bf'))),
+('mdesorme', crypt('derp', gen_salt('bf'))),
 ('lass', crypt('qwerty', gen_salt('bf'))),
 ('1coach', crypt('p00d13', gen_salt('bf'))),
 ('2coach', crypt('changeme', gen_salt('bf'))),
@@ -42,6 +46,7 @@ CREATE TABLE IF NOT EXISTS admin (
 
 INSERT INTO admin (user_name, first_name, last_name, email) VALUES
 ('mpokorny', 'Michael', 'Pokorny', 'mpokorny@mail.umw.edu'),
+('mdesorme', 'Michelle', 'Desormeaux', 'mdesorme@mail.umw.edu'),
 ('aperkins', 'Ann', 'Perkins', 'aperkins@mail.umw.edu'),
 ('lass', 'Lazy', 'Ass', 'lass@mail.umw.edu');
 

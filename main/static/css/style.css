@@ -1075,7 +1075,7 @@ PANELS CONFIGURATIONS
 /*Green Panel*/
 .green-panel {
 	text-align: center;
-	background: #5496cf;
+	background: #f2f2f2;
 }
 .green-panel .green-header {
 	background: #7aadd9;
@@ -1430,11 +1430,12 @@ PANELS CONFIGURATIONS
 
 /* Calendar Configuration */
 #calendar {
-	color: white;
+	color: grey;
 	padding: 0px !important;
 }
 .calendar-month-header {
-	background: #7aadd9;
+	background: #7AADD9;
+	color: white;
 }
 
 /* TODO PANEL */

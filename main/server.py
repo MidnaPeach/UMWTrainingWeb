@@ -80,6 +80,10 @@ def login():
     #return render_template('index.html')
 #end login----------------------------------------------------------------------------------------------------
 
+#**********************************
+#*************ADMIN****************
+#**********************************
+
 #admin home---------------------------------------------------------------------------------------------------    
 @app.route('/ahome', methods=['GET', 'POST'])
 def adminHome():
@@ -175,7 +179,59 @@ def adminCalendarPage():
     #user and userType are being passed to the website here
     return render_template('Theme/acalendar.html', user = verifiedUser, userType = userType, Name = names)
 #end admin calendar page--------------------------------------------------     
-    
+
+#admin exercises page------------------------------------------------------    
+@app.route('/aexercises', methods=['GET', 'POST'])
+def adminExercisesPage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    if verifiedUser == '':
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    # if user typed in a post ...
+    if request.method == 'POST':
+        print "HI"
+        session['username'] = request.form['username']
+        print(session['username'])
+
+        pw = request.form['pw']
+        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        print query
+        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        if cur.fetchone():
+            verifiedUser = session['username']
+            return redirect(url_for('adminHome'))
+        else:
+            verifiedUser = ''
+            session['username'] = ''
+
+    if userType == 'admin':
+        # getting the user's first and last name(only admins)
+        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        names=cur.fetchall()
+        print(names)
+        
+    #user and userType are being passed to the website here
+    return render_template('Theme/aexercises.html', user = verifiedUser, userType = userType, Name = names)
+#end admin exercises page--------------------------------------------------  
+
+#**********************************
+#*************STUDENT**************
+#**********************************
+
 #student home---------------------------------------------------------------------------------------------------
 @app.route('/shome', methods=['GET', 'POST'])
 def studentHome():
@@ -224,7 +280,7 @@ def studentHome():
     return render_template('Theme/shome.html', user = verifiedUser, userType = userType, Name = names)
 #end studentHome------------------------------------------------------------------------------------------------------------------------    
     
-#student home---------------------------------------------------------------------------------------------------
+#student calendar page---------------------------------------------------------------------------------------------------
 @app.route('/scalendar', methods=['GET', 'POST'])
 def studentCalendarPage():
     if 'username' in session:
@@ -264,13 +320,13 @@ def studentCalendarPage():
             
     if userType == 'student':
         # getting the user's first and last name(only students)
-        cur.execute("select first_name, last_name from students WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        cur.execute("select first_name, last_name from students WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason (I think it's because it's a tuple?)
         names=cur.fetchall()
         print(names)
     
     #user and userType are being passed to the website here
     return render_template('Theme/scalendar.html', user = verifiedUser, userType = userType, Name = names)
-#end studentHome------------------------------------------------------------    
+#end studentCalendarPage------------------------------------------------------------    
     
     
     
