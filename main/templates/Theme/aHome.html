@@ -1,16 +1,12 @@
-
-
-<!-- this is the html file that is the admin's homepage. -->
-    <!-- I'm hoping this will still render the top bar thing in the template top bar.html -->
-
+<!-- admin's homepage. -->
+<html>
+<head>
       
-      
-            {% include "topBar.html" %}
-      
-          {% block siteTitle %} <title> UMW Training - Admin Home </title> {% endblock %}
-  <body>
-  <section id="container" >
       <!-- this line is full of magic and basically puts another html file into this one -->
+      {% include "topBar.html" %}
+          {% block siteTitle %} <title> UMW Training - Admin Home </title> {% endblock %}
+
+      <!-- this line is also full of magic and basically puts another html file into this one -->
       {% include "adminSideMenu.html" -%}
       
       <!-- **********************************************************************************************************************************************************
@@ -19,7 +15,6 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper"> <!--style="position: reletive; bottom: 0; top: 0; left: 0; right: 0;"> -->
-
               <div class="row">
                 
                         <!-- CALENDAR-->
@@ -40,7 +35,7 @@
                         </div><!-- / calendar -->
                       
     <!--              </div><!-- /col-lg-3 -->
-              </div><! --/row -->
+              </div><!--/row -->
           </section>
       </section>
 
