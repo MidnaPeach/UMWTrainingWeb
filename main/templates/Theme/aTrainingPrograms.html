@@ -1,5 +1,5 @@
 {% include "topBar.html" %}
-    {% block siteTitle %} <title> UMW Training - Exercises </title> {% endblock %}
+    {% block siteTitle %} <title> UMW Training - Training Programs </title> {% endblock %}
       
             <!-- this line is magical -->
       {% include "adminSideMenu.html" -%}
@@ -10,22 +10,22 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper site-min-height">
-          	<h3><i class="fa fa-angle-right"></i> Exercises </h3>
+          	<h3><i class="fa fa-angle-right"></i> Training Programs </h3>
           	<div class="row mt">
           		<div class="col-lg-12">
           		<center>
-          		    <a href="/aCreateExercise">
-          		        <input type="submit" value="Create Exercise"><br><br>
-          		    </a>
+          		    <input type="submit" value="Create Training Program"><br><br>
           		    <form method="post", action="/aExercisesPage">
           		    <!--<input type="submit" value="Edit" name="Submit1">-->
           		    <table style="color:white; background-color: #5496cf;">
                         <tr>
                             <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
                             <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;Muscle Group&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;Has Video?&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sport&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;Muscle Group&nbsp;&nbsp;&nbsp;</center></td>
                         </tr>
+                        <!-- here is where we will print the training program data
                         {% for result in results %}
                         <tr>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
@@ -35,7 +35,7 @@
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
                                 
                                     <center><input class="astext" type="submit" value={{result[0]}} name="Submit1" /></center>
-                                    <!--<input type="submit" value="Submit" name="Submit1" />-->
+                                    Comment this out later <input type="submit" value="Submit" name="Submit1" /> Commment this out later
                                
                             </td>
                             
@@ -53,6 +53,7 @@
                         </tr>
                         
                         {% endfor %}
+                        here is where the training program data stops -->
                     </table>
           		    </form>
           		</center>

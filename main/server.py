@@ -1,12 +1,9 @@
 #this is the file that starts the server and has all of the server commands in it
-#!/usr/bin/env python
 
 import psycopg2
 import psycopg2.extras
 import os
 from flask import Flask, session, render_template, request, redirect, url_for
-import cgi, cgitb
-cgitb.enable()
 
 app = Flask(__name__)
 
@@ -15,7 +12,6 @@ app.secret_key = os.urandom(24).encode('hex')
 loginError = False
 verifiedUser = ''
 userType = ''
-
 
 #connectToDB--------------------------------------------------------------------------------------------
 def connectToDB():
@@ -209,7 +205,7 @@ def adminCalendarPage():
 #end admin calendar page--------------------------------------------------     
 
 #admin exercises page------------------------------------------------------    
-@app.route('/aExercisesPage', methods=['GET', 'POST'])
+@app.route('/aExercises', methods=['GET', 'POST'])
 def adminExercisesPage():
     if 'username' in session:
         verifiedUser = session['username']
@@ -229,46 +225,27 @@ def adminExercisesPage():
         verifiedUser = ''
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    
-    # get all exercises from the database ...
-    rows = []
-    query = "select exercise_name, muscle_group, youtube_link from exercises"
-    print query
-    cur.execute("select exercise_name, muscle_group, youtube_link from exercises")
-    #if cur.fetchone():
-    rows = cur.fetchall()
-    print(rows)
-    print(rows[0][0])
-    
     # if user typed in a post ...
     if request.method == 'POST':
         print "HI"
-        print "made it to post"
-        
-        #This is where we iterate through all exercises found in the database to see which one was selected.
-        form = cgi.FieldStorage()
-        print(form)
-        cats = form.getvalue('Submit1')
-        print(cats)
-        if "Submit1" in form:
-            button = 1
-        elif "Submit2" in form:
-            button = 2
-        else:
-            print "Couldn't determine which button was pressed."
-        #session['username'] = request.form['username']
-        #print(session['username'])
+        session['username'] = request.form['username']
+        print(session['username'])
 
-        #pw = request.form['pw']
-        #query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
-        #print query
-        #cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
-        #if cur.fetchone():
-        #    verifiedUser = session['username']
-        #    return redirect(url_for('adminHome'))
-        #else:
-        #    verifiedUser = ''
-        #    session['username'] = ''
+        pw = request.form['pw']
+        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        print query
+        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        if cur.fetchone():
+            verifiedUser = session['username']
+            return redirect(url_for('adminHome'))
+        else:
+            verifiedUser = ''
+            session['username'] = ''
+            
+    # get exercises from the database
+    rows=[]
+    cur.execute('SELECT exercise_name, muscle_group, youtube_link FROM exercises')
+    rows=cur.fetchall()
 
     if userType == 'admin':
         # getting the user's first and last name(only admins)
@@ -277,7 +254,7 @@ def adminExercisesPage():
         print(names)
         
     #user and userType are being passed to the website here
-    return render_template('Theme/aExercisesPage.html', user = verifiedUser, userType = userType, Name = names, results = rows)
+    return render_template('Theme/aExercises.html', user = verifiedUser, userType = userType, Name = names, results=rows)
 #end admin exercises page--------------------------------------------------  
 
 #admin create exercises page------------------------------------------------------    
@@ -302,8 +279,6 @@ def adminCreateExercisePage():
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     badName = False
-    exerciseCreated = False
-
     # if user typed in a post ...
     if request.method == 'POST':
         print "HI"
@@ -322,12 +297,9 @@ def adminCreateExercisePage():
         cur.execute("select exercise_name from exercises WHERE exercise_name = %s", (exerciseName,))
         if cur.fetchone():
             badName = True
-            #return redirect(url_for('adminCreateExercisePage'))
-        elif exerciseName == '':
-            badName = True
+            return redirect(url_for('adminCreateExercisePage'))
         else:
             badName = False
-            exerciseCreated = True
             query = "INSERT INTO exercises (admin_id, exercise_name, description, muscle_group, youtube_link) VALUES ('%s', '%s', '%s', '%s', '%s')" % (session['ID'],exerciseName,description,muscleGroup,youTube)
             print query
             try:
@@ -346,15 +318,8 @@ def adminCreateExercisePage():
         print(names)
         
     #user and userType are being passed to the website here
-    return render_template('Theme/aCreateExercise.html', user = verifiedUser, userType = userType, Name = names, badName = badName, exerciseCreated = exerciseCreated)
+    return render_template('Theme/aCreateExercise.html', user = verifiedUser, userType = userType, Name = names, badName = badName)
 #end admin create exercise page--------------------------------------------------
-
-#admin edit exercise page-------------------------------------------------------
-@app.route('/aEditExercise', methods=['GET', 'POST'])
-def adminEditExercise():
-    print("WIP")
-    return render_template('Theme/aEditExercise.html') #user = verifiedUser, userType = userType, Name = names)
-#end admin edit exercise page---------------------------------------------------
 
 #admin workouts page------------------------------------------------------    
 @app.route('/aWorkouts', methods=['GET', 'POST'])
@@ -403,6 +368,54 @@ def adminWorkoutsPage():
     #user and userType are being passed to the website here
     return render_template('Theme/aWorkouts.html', user = verifiedUser, userType = userType, Name = names)
 #end admin workout page--------------------------------------------------  
+
+#admin training programs page------------------------------------------------------    
+@app.route('/aTrainingPrograms', methods=['GET', 'POST'])
+def adminTrainingProgramsPage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    if verifiedUser == '':
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    # if user typed in a post ...
+    if request.method == 'POST':
+        print "HI"
+        session['username'] = request.form['username']
+        print(session['username'])
+
+        pw = request.form['pw']
+        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        print query
+        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        if cur.fetchone():
+            verifiedUser = session['username']
+            return redirect(url_for('adminHome'))
+        else:
+            verifiedUser = ''
+            session['username'] = ''
+
+    if userType == 'admin':
+        # getting the user's first and last name(only admins)
+        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        names=cur.fetchall()
+        print(names)
+        
+    #user and userType are being passed to the website here
+    return render_template('Theme/aTrainingPrograms.html', user = verifiedUser, userType = userType, Name = names)
+#end admin training program page-------------------------------------------------- 
 
 #admin create workout page------------------------------------------------------    
 @app.route('/aCreateWorkout', methods=['GET', 'POST'])
