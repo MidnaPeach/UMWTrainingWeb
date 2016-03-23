@@ -232,8 +232,9 @@ def adminExercisesPage():
     query = "select exercise_name, muscle_group, youtube_link from exercises"
     print query
     cur.execute("select exercise_name, muscle_group, youtube_link from exercises")
-    if cur.fetchone():
-        rows = cur.fetchall()
+    #if cur.fetchone():
+    rows = cur.fetchall()
+    print(rows)
         #verifiedUser = session['username']
         #return redirect(url_for('adminHome'))
     #else:

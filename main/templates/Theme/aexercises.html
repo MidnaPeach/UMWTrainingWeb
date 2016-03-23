@@ -10,7 +10,7 @@
     <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
 
     <!-- This is what appears on the websites tab -->
-    <title>UMW Training Program</title>
+    <title>UMW Training Program - Exercises</title>
 
     <!-- Bootstrap core CSS -->
     <link href="static/css/bootstrap.css" rel="stylesheet">
@@ -49,12 +49,8 @@
                   <img alt="avatar" class="resize" src="static/img/UMW Banner.png">
               </center>
           </div>    
-          <div style="padding: 0 15px; height:55px; overflow: hidden; max-height: 55px;">
-              <div class="sidebar-toggle-box">
-                  <div class="fa fa-bars tooltips" data-placement="right" data-original-title="Toggle Navigation"></div>
-              </div>
             <!--logo start-->
-            <a href="/ahome" class="logo">UMW Training Program</a>
+            <a href="/ahome" class="logo" style="padding: 0 15px">UMW Training Program</a>
             <!--logo end-->
    
             <div class="top-menu">
@@ -178,6 +174,37 @@
           		    <a href="/acreateexercise">
           		        <input type="submit" value="Create Exercise"><br><br>
           		    </a>
+          		    <table style="color:white; background-color: #5496cf; border: 1px solid lightgrey;">
+                        <tr>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Muscle Group&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Has Video?&nbsp;&nbsp;</center></td>
+                        </tr>
+                        {% for result in results %}
+                        <tr>
+                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                <center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Edit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center>
+                            </td>
+                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                <center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result[0]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center>
+                            </td>
+                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                <center>&nbsp;&nbsp;{{result[1]}}&nbsp;&nbsp;</center>
+                            </td>
+                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                {% if result[2] == '' %}
+                                    <center>&nbsp;&nbsp;No&nbsp;&nbsp;</center>
+                                {% endif %}
+                                {% if result[2] != '' %}
+                                    <center>&nbsp;&nbsp;Yes&nbsp;&nbsp;</center>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        
+                        {% endfor %}
+                    </table>
+          		    
           		</center>
           		<p>This is where we will have a table of exercises from the database.</p>
           		<p>The user can create an exercise by clicking the create exercise button.</p>
