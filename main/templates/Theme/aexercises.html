@@ -174,21 +174,28 @@
           		    <a href="/acreateexercise">
           		        <input type="submit" value="Create Exercise"><br><br>
           		    </a>
-          		    <table style="color:white; background-color: #5496cf; border: 1px solid lightgrey;">
+          		    <form method="post", action="/aexercises">
+          		    <!--<input type="submit" value="Edit" name="Submit1">-->
+          		    <table style="color:white; background-color: #5496cf;">
                         <tr>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Muscle Group&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Has Video?&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;Muscle Group&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;Has Video?&nbsp;&nbsp;</center></td>
                         </tr>
                         {% for result in results %}
                         <tr>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Edit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center>
+                                <center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Edit" name="Submit1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center>
                             </td>
+                            
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{result[0]}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center>
+                                
+                                    <center><input class="astext" type="submit" value={{result[0]}} name="Submit1" /></center>
+                                    <!--<input type="submit" value="Submit" name="Submit1" />-->
+                               
                             </td>
+                            
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
                                 <center>&nbsp;&nbsp;{{result[1]}}&nbsp;&nbsp;</center>
                             </td>
@@ -204,11 +211,10 @@
                         
                         {% endfor %}
                     </table>
-          		    
+          		    </form>
           		</center>
-          		<p>This is where we will have a table of exercises from the database.</p>
-          		<p>The user can create an exercise by clicking the create exercise button.</p>
-          		<p>The user can select an exercise and then choose to edit or delete it.</p>
+                <br><br>
+          		<!--<p>The user can select an exercise and then choose to edit or delete it.</p>-->
           		</div>
           	</div>
 			

@@ -12,6 +12,12 @@ Premium: http://www.gridgum.com
 
 /* BASIC THEME CONFIGURATION */
 
+.astext {
+    background:none;
+    border:none;
+    margin:0;
+    padding:0;
+}
 
 .resize {
     width: 80%;
@@ -445,6 +451,7 @@ a.logo {
     color: #ffffff;
     float: left;
     margin-top: 15px;
+    margin-bottom: 15px;
     font-weight: 300
     /*text-transform: uppercase;*/
 }

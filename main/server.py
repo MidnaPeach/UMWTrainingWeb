@@ -1,9 +1,12 @@
 #this is the file that starts the server and has all of the server commands in it
+#!/usr/bin/env python
 
 import psycopg2
 import psycopg2.extras
 import os
 from flask import Flask, session, render_template, request, redirect, url_for
+import cgi, cgitb
+cgitb.enable()
 
 app = Flask(__name__)
 
@@ -235,29 +238,37 @@ def adminExercisesPage():
     #if cur.fetchone():
     rows = cur.fetchall()
     print(rows)
-        #verifiedUser = session['username']
-        #return redirect(url_for('adminHome'))
-    #else:
-        #verifiedUser = ''
-        #session['username'] = ''
-    
+    print(rows[0][0])
     
     # if user typed in a post ...
     if request.method == 'POST':
         print "HI"
-        session['username'] = request.form['username']
-        print(session['username'])
-
-        pw = request.form['pw']
-        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
-        print query
-        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
-        if cur.fetchone():
-            verifiedUser = session['username']
-            return redirect(url_for('adminHome'))
+        print "made it to post"
+        
+        #This is where we iterate through all exercises found in the database to see which one was selected.
+        form = cgi.FieldStorage()
+        print(form)
+        cats = form.getvalue('Submit1')
+        print(cats)
+        if "Submit1" in form:
+            button = 1
+        elif "Submit2" in form:
+            button = 2
         else:
-            verifiedUser = ''
-            session['username'] = ''
+            print "Couldn't determine which button was pressed."
+        #session['username'] = request.form['username']
+        #print(session['username'])
+
+        #pw = request.form['pw']
+        #query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        #print query
+        #cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        #if cur.fetchone():
+        #    verifiedUser = session['username']
+        #    return redirect(url_for('adminHome'))
+        #else:
+        #    verifiedUser = ''
+        #    session['username'] = ''
 
     if userType == 'admin':
         # getting the user's first and last name(only admins)
@@ -312,6 +323,8 @@ def adminCreateExercisePage():
         if cur.fetchone():
             badName = True
             #return redirect(url_for('adminCreateExercisePage'))
+        elif exerciseName == '':
+            badName = True
         else:
             badName = False
             exerciseCreated = True

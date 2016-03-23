@@ -186,11 +186,16 @@
                                 <input type="text" name="ename" style="margin-left: 10px; margin-right: 10px;">
                             </td>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <select name="emusclegroup">
-                                    <option value="etc.">Muscle Groups</option>
-                                    <option value="etc.">etc.</option>
-                                    <option value="etc.">etc.</option>
-                                    <option value="etc.">etc.</option>
+                                <select name="emusclegroup" value="Muscle Groups">
+                                    <option value="Chest">Chest</option>
+                                    <option value="Arms">Arms</option>
+                                    <option value="Legs">Legs</option>
+                                    <option value="Back">Back</option>
+                                    <option value="Shoulders">Shoulders</option>
+                                    <option value="Neck">Neck</option>
+                                    <option value="Abs">Abs</option>
+                                    <option value="Upper Body">Upper Body</option>
+                                    <option value="Lower Body">Lower Body</option>
                                 </select>
                             </td>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
@@ -207,7 +212,7 @@
           		        </a>
           		    </br>
           		    {% if badName %}
-          		        <p style="color:red">Error: name typed cannot match the name of an exercise already created.</p>
+          		        <p style="color:red">Error: name cannot be blank and cannot match the name of an exercise that already exists.</p>
           		    {% endif %}
           		    {% if exerciseCreated %}
           		        <p style="color:black">Exercise Created!</p>
