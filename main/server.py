@@ -13,6 +13,7 @@ loginError = False
 verifiedUser = ''
 userType = ''
 
+
 #connectToDB--------------------------------------------------------------------------------------------
 def connectToDB():
     connectionString = 'dbname=umw_training user=website password=umw16p91V2Hkl8m9 host=localhost'
@@ -47,7 +48,7 @@ def login():
       print(session['username'])
 
       pw = request.form['pw']
-      query = "select * from users WHERE user_name = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+      query = "select * from users WHERE user_name = '%s' AND password = crypt('****************', password)" % (session['username'],)
       print query
       cur.execute("select * from users WHERE user_name = %s AND password = crypt(%s, password)", (session['username'], pw))
       if cur.fetchone():
@@ -56,15 +57,39 @@ def login():
          cur.execute("select * from admin WHERE user_name = %s", (verifiedUser,))
          if cur.fetchone():
             session['userType'] = 'admin'
+            query = "select admin_id from admin WHERE user_name = '%s'" % (session['username'],)
+            print query
+            cur.execute("select admin_id from admin WHERE user_name = %s", (session['username'],))
+            session['ID'] = cur.fetchall()
+            session['ID'] = session['ID'][0][0]
+            print session['ID']
          cur.execute("select * from students WHERE user_name = %s", (verifiedUser,))
          if cur.fetchone():
             session['userType'] = 'student'
+            query = "select student_id from students WHERE user_name = '%s'" % (session['username'],)
+            print query
+            cur.execute("select student_id from students WHERE user_name = %s", (session['username'],))
+            session['ID'] = cur.fetchall()
+            session['ID'] = session['ID'][0][0]
+            print session['ID']
          cur.execute("select * from coaches WHERE user_name = %s", (verifiedUser,))
          if cur.fetchone():
             session['userType'] = 'coach'
+            query = "select coach_id from coaches WHERE user_name = '%s'" % (session['username'],)
+            print query
+            cur.execute("select coach_id from coaches WHERE user_name = %s", (session['username'],))
+            session['ID'] = cur.fetchall()
+            session['ID'] = session['ID'][0][0]
+            print session['ID']
          cur.execute("select * from trainers WHERE user_name = %s", (verifiedUser,))
          if cur.fetchone():
             session['userType'] = 'trainer'
+            query = "select trainer_id from trainers WHERE user_name = '%s'" % (session['username'],)
+            print query
+            cur.execute("select trainer_id from trainers WHERE user_name = %s", (session['username'],))
+            session['ID'] = cur.fetchall()
+            session['ID'] = session['ID'][0][0]
+            print session['ID']
          
          if session['userType'] == 'admin':
             return redirect(url_for('adminHome'))
@@ -201,6 +226,21 @@ def adminExercisesPage():
         verifiedUser = ''
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    # get all exercises from the database ...
+    rows = []
+    query = "select exercise_name, muscle_group, youtube_link from exercises"
+    print query
+    cur.execute("select exercise_name, muscle_group, youtube_link from exercises")
+    if cur.fetchone():
+        rows = cur.fetchall()
+        #verifiedUser = session['username']
+        #return redirect(url_for('adminHome'))
+    #else:
+        #verifiedUser = ''
+        #session['username'] = ''
+    
+    
     # if user typed in a post ...
     if request.method == 'POST':
         print "HI"
@@ -225,8 +265,219 @@ def adminExercisesPage():
         print(names)
         
     #user and userType are being passed to the website here
-    return render_template('Theme/aexercises.html', user = verifiedUser, userType = userType, Name = names)
+    return render_template('Theme/aexercises.html', user = verifiedUser, userType = userType, Name = names, results = rows)
 #end admin exercises page--------------------------------------------------  
+
+#admin create exercises page------------------------------------------------------    
+@app.route('/acreateexercise', methods=['GET', 'POST'])
+def adminCreateExercisePage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    if verifiedUser == '':
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    badName = False
+    exerciseCreated = False
+
+    # if user typed in a post ...
+    if request.method == 'POST':
+        print "HI"
+        
+        exerciseName = request.form['ename']
+        print(exerciseName)
+        muscleGroup = request.form['emusclegroup']
+        print(muscleGroup)
+        description = request.form['edesc']
+        print(description)
+        youTube = request.form['eyoutube']
+        print(youTube)
+        
+        query = "select exercise_name from exercises WHERE exercise_name = '%s'" % (exerciseName,)
+        print query
+        cur.execute("select exercise_name from exercises WHERE exercise_name = %s", (exerciseName,))
+        if cur.fetchone():
+            badName = True
+            #return redirect(url_for('adminCreateExercisePage'))
+        else:
+            badName = False
+            exerciseCreated = True
+            query = "INSERT INTO exercises (admin_id, exercise_name, description, muscle_group, youtube_link) VALUES ('%s', '%s', '%s', '%s', '%s')" % (session['ID'],exerciseName,description,muscleGroup,youTube)
+            print query
+            try:
+                cur.execute("INSERT INTO exercises (admin_id, exercise_name, description, muscle_group, youtube_link) VALUES (%s, %s, %s, %s, %s)", (session['ID'],exerciseName,description,muscleGroup,youTube))
+            except:
+                print("Problem inserting into exercises")
+                db.rollback()
+            db.commit()
+            
+            print("done!")
+
+    if userType == 'admin':
+        # getting the user's first and last name(only admins)
+        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        names=cur.fetchall()
+        print(names)
+        
+    #user and userType are being passed to the website here
+    return render_template('Theme/acreateexercise.html', user = verifiedUser, userType = userType, Name = names, badName = badName, exerciseCreated = exerciseCreated)
+#end admin create exercise page--------------------------------------------------
+
+#admin workouts page------------------------------------------------------    
+@app.route('/aworkouts', methods=['GET', 'POST'])
+def adminWorkoutsPage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    if verifiedUser == '':
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    # if user typed in a post ...
+    if request.method == 'POST':
+        print "HI"
+        session['username'] = request.form['username']
+        print(session['username'])
+
+        pw = request.form['pw']
+        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        print query
+        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        if cur.fetchone():
+            verifiedUser = session['username']
+            return redirect(url_for('adminHome'))
+        else:
+            verifiedUser = ''
+            session['username'] = ''
+
+    if userType == 'admin':
+        # getting the user's first and last name(only admins)
+        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        names=cur.fetchall()
+        print(names)
+        
+    #user and userType are being passed to the website here
+    return render_template('Theme/aworkouts.html', user = verifiedUser, userType = userType, Name = names)
+#end admin workout page--------------------------------------------------  
+
+#admin create workout page------------------------------------------------------    
+@app.route('/acreateeworkout', methods=['GET', 'POST'])
+def adminCreateWorkoutPage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    if verifiedUser == '':
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    # if user typed in a post ...
+    if request.method == 'POST':
+        print "HI"
+        session['username'] = request.form['username']
+        print(session['username'])
+
+        pw = request.form['pw']
+        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        print query
+        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        if cur.fetchone():
+            verifiedUser = session['username']
+            return redirect(url_for('adminHome'))
+        else:
+            verifiedUser = ''
+            session['username'] = ''
+
+    if userType == 'admin':
+        # getting the user's first and last name(only admins)
+        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        names=cur.fetchall()
+        print(names)
+        
+    #user and userType are being passed to the website here
+    return render_template('Theme/acreateworkout.html', user = verifiedUser, userType = userType, Name = names)
+#end admin create workout page--------------------------------------------------
+
+#admin add user page------------------------------------------------------    
+@app.route('/aadduser', methods=['GET', 'POST'])
+def adminAddUserPage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    if verifiedUser == '':
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    # if user typed in a post ...
+    if request.method == 'POST':
+        print "HI"
+        session['username'] = request.form['username']
+        print(session['username'])
+
+        pw = request.form['pw']
+        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        print query
+        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        if cur.fetchone():
+            verifiedUser = session['username']
+            return redirect(url_for('adminHome'))
+        else:
+            verifiedUser = ''
+            session['username'] = ''
+
+    if userType == 'admin':
+        # getting the user's first and last name(only admins)
+        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        names=cur.fetchall()
+        print(names)
+        
+    #user and userType are being passed to the website here
+    return render_template('Theme/aadduser.html', user = verifiedUser, userType = userType, Name = names)
+#end admin add user page--------------------------------------------------  
 
 #**********************************
 #*************STUDENT**************
