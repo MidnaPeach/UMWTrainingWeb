@@ -113,7 +113,7 @@ def login():
 #**********************************
 
 #admin home---------------------------------------------------------------------------------------------------    
-@app.route('/ahome', methods=['GET', 'POST'])
+@app.route('/aHome', methods=['GET', 'POST'])
 def adminHome():
     if 'username' in session:
         verifiedUser = session['username']
@@ -157,11 +157,11 @@ def adminHome():
         print(names)
         
     #user and userType are being passed to the website here
-    return render_template('Theme/ahome.html', user = verifiedUser, userType = userType, Name = names)
+    return render_template('Theme/aHome.html', user = verifiedUser, userType = userType, Name = names)
 #end adminHome------------------------------------------------------------------------------------------------------------------------ 
 
 #admin calendar page------------------------------------------------------    
-@app.route('/acalendar', methods=['GET', 'POST'])
+@app.route('/aCalendar', methods=['GET', 'POST'])
 def adminCalendarPage():
     if 'username' in session:
         verifiedUser = session['username']
@@ -205,11 +205,11 @@ def adminCalendarPage():
         print(names)
         
     #user and userType are being passed to the website here
-    return render_template('Theme/acalendar.html', user = verifiedUser, userType = userType, Name = names)
+    return render_template('Theme/aCalendar.html', user = verifiedUser, userType = userType, Name = names)
 #end admin calendar page--------------------------------------------------     
 
 #admin exercises page------------------------------------------------------    
-@app.route('/aexercises', methods=['GET', 'POST'])
+@app.route('/aExercisesPage', methods=['GET', 'POST'])
 def adminExercisesPage():
     if 'username' in session:
         verifiedUser = session['username']
@@ -277,11 +277,11 @@ def adminExercisesPage():
         print(names)
         
     #user and userType are being passed to the website here
-    return render_template('Theme/aexercises.html', user = verifiedUser, userType = userType, Name = names, results = rows)
+    return render_template('Theme/aExercisesPage.html', user = verifiedUser, userType = userType, Name = names, results = rows)
 #end admin exercises page--------------------------------------------------  
 
 #admin create exercises page------------------------------------------------------    
-@app.route('/acreateexercise', methods=['GET', 'POST'])
+@app.route('/aCreateExercise', methods=['GET', 'POST'])
 def adminCreateExercisePage():
     if 'username' in session:
         verifiedUser = session['username']
@@ -346,11 +346,18 @@ def adminCreateExercisePage():
         print(names)
         
     #user and userType are being passed to the website here
-    return render_template('Theme/acreateexercise.html', user = verifiedUser, userType = userType, Name = names, badName = badName, exerciseCreated = exerciseCreated)
+    return render_template('Theme/aCreateExercise.html', user = verifiedUser, userType = userType, Name = names, badName = badName, exerciseCreated = exerciseCreated)
 #end admin create exercise page--------------------------------------------------
 
+#admin edit exercise page-------------------------------------------------------
+@app.route('/aEditExercise', methods=['GET', 'POST'])
+def adminEditExercise():
+    print("WIP")
+    return render_template('Theme/aEditExercise.html') #user = verifiedUser, userType = userType, Name = names)
+#end admin edit exercise page---------------------------------------------------
+
 #admin workouts page------------------------------------------------------    
-@app.route('/aworkouts', methods=['GET', 'POST'])
+@app.route('/aWorkouts', methods=['GET', 'POST'])
 def adminWorkoutsPage():
     if 'username' in session:
         verifiedUser = session['username']
@@ -394,11 +401,11 @@ def adminWorkoutsPage():
         print(names)
         
     #user and userType are being passed to the website here
-    return render_template('Theme/aworkouts.html', user = verifiedUser, userType = userType, Name = names)
+    return render_template('Theme/aWorkouts.html', user = verifiedUser, userType = userType, Name = names)
 #end admin workout page--------------------------------------------------  
 
 #admin create workout page------------------------------------------------------    
-@app.route('/acreateeworkout', methods=['GET', 'POST'])
+@app.route('/aCreateWorkout', methods=['GET', 'POST'])
 def adminCreateWorkoutPage():
     if 'username' in session:
         verifiedUser = session['username']
@@ -442,11 +449,11 @@ def adminCreateWorkoutPage():
         print(names)
         
     #user and userType are being passed to the website here
-    return render_template('Theme/acreateworkout.html', user = verifiedUser, userType = userType, Name = names)
+    return render_template('Theme/aCreateWorkout.html', user = verifiedUser, userType = userType, Name = names)
 #end admin create workout page--------------------------------------------------
 
 #admin add user page------------------------------------------------------    
-@app.route('/aadduser', methods=['GET', 'POST'])
+@app.route('/aAddUser', methods=['GET', 'POST'])
 def adminAddUserPage():
     if 'username' in session:
         verifiedUser = session['username']
@@ -490,7 +497,7 @@ def adminAddUserPage():
         print(names)
         
     #user and userType are being passed to the website here
-    return render_template('Theme/aadduser.html', user = verifiedUser, userType = userType, Name = names)
+    return render_template('Theme/aAddUser.html', user = verifiedUser, userType = userType, Name = names)
 #end admin add user page--------------------------------------------------  
 
 #**********************************
