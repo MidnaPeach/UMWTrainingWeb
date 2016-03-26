@@ -5,6 +5,8 @@
    
       <!-- this line is magical -->
       {% include "adminSideMenu.html" -%}
+     
+     
       
       <!-- **********************************************************************************************************************************************************
       MAIN CONTENT
@@ -27,9 +29,10 @@
                         </tr>
                         <tr>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <input type="text" name="ename" style="margin-left: 10px; margin-right: 10px;">
+                                <input type="text" name="ename" style="margin-left: 10px; margin-right: 10px;" maxlength="20">
                             </td>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                <center>
                                 <select name="emusclegroup" value="Muscle Groups">
                                     <option value="Chest">Chest</option>
                                     <option value="Arms">Arms</option>
@@ -41,9 +44,10 @@
                                     <option value="Upper Body">Upper Body</option>
                                     <option value="Lower Body">Lower Body</option>
                                 </select>
+                                </center>
                             </td>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <input type="text" name="edesc" style="margin-left: 10px; margin-right: 10px;">
+                                <textarea rows="4" cols="30" name="edesc" style="margin-left: 10px; margin-right: 10px;"></textarea>
                             </td>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
                                 <input type="text" name="eyoutube" style="margin-left: 10px; margin-right: 10px;">

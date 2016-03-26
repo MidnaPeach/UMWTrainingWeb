@@ -9,6 +9,7 @@
       <!-- this line is also full of magic and basically puts another html file into this one -->
       {% include "adminSideMenu.html" -%}
       
+      {% block highlight1 %} class="active" {% endblock %}
       <!-- **********************************************************************************************************************************************************
       MAIN CONTENT
       *********************************************************************************************************************************************************** -->
@@ -44,7 +45,7 @@
       <footer class="site-footer"><!--style="position: reletive; bottom: 0; right: 0; left: 0;">-->
           <div class="text-center">
               2016 - UMW Training Program 
-              <a href="aHome" class="go-top">
+              <a href="/aHome" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
           </div>

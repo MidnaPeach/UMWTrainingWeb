@@ -17,44 +17,87 @@
           		    <a href="/aCreateExercise">
           		        <input type="submit" value="Create Exercise"><br><br>
           		    </a>
-          		    <form method="post", action="/aExercisesPage">
+          		    
           		    <!--<input type="submit" value="Edit" name="Submit1">-->
           		    <table style="color:white; background-color: #5496cf;">
                         <tr>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;Muscle Group&nbsp;&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;Has Video?&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Muscle Group&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Has Video?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
                         </tr>
                         {% for result in results %}
                         <tr>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Edit" name="Submit1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center>
+                                <center>
+                                    <table>
+                                        <tr>
+                                            <td>
+                                                <form method="post", action="/aExercises">
+                                                    <input style="margin-right: 3px; margin-left: 3px; margin-top: 5px; margin-bottom: -12px;" type="submit" value="Edit" name="action">
+                                                    <input class="astext" type="hidden" value="{{result[0]}}" name="exercise">
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form method="post", action="/aExercises">
+                                                    <input style="margin-right: 3px; margin-top: 5px; margin-bottom: -12px;" onclick="confirmDelete()" type="submit" value="Delete" name="action">
+                                                    <input class="confirm" type="hidden" value="" name="confirmD">
+                                                    <input type="hidden" value="{{result[0]}}" name="exercise">
+                                                    
+                                                    <script>
+                                                    function confirmDelete() {
+                                                        var x;
+                                                        if (confirm("Are you sure you want to delete?") == true) {
+                                                            x = "Delete";
+                                                        } else {
+                                                                x = "NoDelete";
+                                                        }
+                                                        
+                                                        var elements = document.getElementsByClassName("confirm");
+                                                        for(var i=0; i<elements.length; i++) {
+                                                            elements[i].value = x;
+                                                        }
+                                                    }
+                                                    </script>
+                                                    
+                                                </form>
+                                            </td>
+                                            <td>
+                                                <form method="post", action="/aExercises">
+                                                    <input style="margin-right: 3px; margin-top: 5px; margin-bottom: -12px;" type="submit" value="View" name="action">
+                                                    <input class="astext" type="hidden" value="{{result[0]}}" name="exercise">
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </center>
                             </td>
                             
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
                                 
-                                    <center><input class="astext" type="submit" value={{result[0]}} name="Submit1" /></center>
+                                    <center>{{result[0]}}</center>
+                                    <!-- #This is me trying to make the actual text of the name a button to veiw... -->
+                                    <!--<center><input class="astext" type="submit" value={{result[0]}} name="Submit1" /></center>-->
                                     <!--<input type="submit" value="Submit" name="Submit1" />-->
                                
                             </td>
                             
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <center>&nbsp;&nbsp;{{result[1]}}&nbsp;&nbsp;</center>
+                                <center>{{result[1]}}</center>
                             </td>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
                                 {% if result[2] == '' %}
-                                    <center>&nbsp;&nbsp;No&nbsp;&nbsp;</center>
+                                    <center>No</center>
                                 {% endif %}
                                 {% if result[2] != '' %}
-                                    <center>&nbsp;&nbsp;Yes&nbsp;&nbsp;</center>
+                                    <center>Yes</center>
                                 {% endif %}
                             </td>
                         </tr>
                         
                         {% endfor %}
                     </table>
-          		    </form>
+          		    
           		</center>
                 <br><br>
           		<!--<p>The user can select an exercise and then choose to edit or delete it.</p>-->
