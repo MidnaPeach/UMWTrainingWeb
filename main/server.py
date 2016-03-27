@@ -409,8 +409,6 @@ def adminEditExercisesPage():
             cur.execute("select exercise_name, muscle_group, description, youtube_link from exercises where exercise_name = %s",(exercise,))
             rows = cur.fetchall()
             print("done!")
-            #return redirect(url_for('adminEditExercisesPage'))
-    print(exerciseEdited)    
     #user, userType, names, and all data for the exercise are being passed to the website here. badName and exerciseEdited are for error and success notification.
     return render_template('Theme/aEditExercises.html', user = verifiedUser, userType = userType, Name = names, results = rows, exercise = exercise, badName = badName, exerciseEdited = exerciseEdited)
 #end admin edit exercises page--------------------------------------------------
@@ -505,31 +503,56 @@ def adminWorkoutsPage():
         verifiedUser = ''
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    # if user typed in a post ...
-    if request.method == 'POST':
-        print "HI"
-        session['username'] = request.form['username']
-        print(session['username'])
-
-        pw = request.form['pw']
-        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
-        print query
-        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
-        if cur.fetchone():
-            verifiedUser = session['username']
-            return redirect(url_for('adminHome'))
-        else:
-            verifiedUser = ''
-            session['username'] = ''
-
+    
+    # get all workouts from the database ...
+    rows = []
+    query = "SELECT workout_name FROM workouts"
+    print query
+    cur.execute("SELECT workout_name FROM workouts")
+    #if cur.fetchone():
+    rows = cur.fetchall()
+    print(rows)
+    ## For dubugging ##
+    #print(rows[0][0])
+    
     if userType == 'admin':
         # getting the user's first and last name(only admins)
         cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
         names=cur.fetchall()
         print(names)
+    
+    # if user typed in a post ...
+    if request.method == 'POST':
+        print "HI"
+        print "made it to post"
         
-    #user and userType are being passed to the website here
-    return render_template('Theme/aWorkouts.html', user = verifiedUser, userType = userType, Name = names)
+        #This is where we iterate through all workouts found in the database to see which one was selected.
+        action = request.form['action']
+        workout = request.form['workout']
+        print(action)
+        print(workout)
+        if action == 'Edit':
+            session['workout'] = workout
+            return redirect(url_for('adminEditWorkoutsPage'))
+        if action == 'Delete':
+            confirm = request.form['confirmD']
+            print(confirm)
+            if confirm == 'Delete':
+                query = "DELETE FROM exercises WHERE exercise_name = '%s'" % (workout,)
+                print(query)
+                try:
+                    cur.execute("DELETE FROM exercises WHERE exercise_name = %s", (workout,))
+                except:
+                    print("Problem inserting into exercises")
+                    db.rollback()
+                db.commit()
+            return redirect(url_for('adminWorkoutsPage'))
+        if action == 'View':
+            session['workout'] = workout
+            return redirect(url_for('adminViewWorkoutsPage'))
+        
+    #user and userType are being passed to the website here along with the workout data as "results".
+    return render_template('Theme/aWorkouts.html', user = verifiedUser, userType = userType, Name = names, results = rows)
 #end admin workout page--------------------------------------------------  
 
 #admin create workout page------------------------------------------------------    
@@ -553,22 +576,43 @@ def adminCreateWorkoutPage():
         verifiedUser = ''
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    badName = False
+    workoutCreated = False
+
     # if user typed in a post ...
     if request.method == 'POST':
         print "HI"
-        session['username'] = request.form['username']
-        print(session['username'])
-
-        pw = request.form['pw']
-        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        
+        workoutName = request.form['ename']
+        print(workoutName)
+        muscleGroup = request.form['emusclegroup']
+        print(muscleGroup)
+        description = request.form['edesc']
+        print(description)
+        youTube = request.form['eyoutube']
+        print(youTube)
+        
+        query = "select exercise_name from exercises WHERE exercise_name = '%s'" % (workoutName,)
         print query
-        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        cur.execute("select exercise_name from exercises WHERE exercise_name = %s", (workoutName,))
         if cur.fetchone():
-            verifiedUser = session['username']
-            return redirect(url_for('adminHome'))
+            badName = True
+            
+        elif workoutName == '':
+            badName = True
         else:
-            verifiedUser = ''
-            session['username'] = ''
+            badName = False
+            workoutCreated = True
+            query = "INSERT INTO exercises (admin_id, exercise_name, description, muscle_group, youtube_link) VALUES ('%s', '%s', '%s', '%s', '%s')" % (session['ID'],workoutName,description,muscleGroup,youTube)
+            print query
+            try:
+                cur.execute("INSERT INTO exercises (admin_id, exercise_name, description, muscle_group, youtube_link) VALUES (%s, %s, %s, %s, %s)", (session['ID'],workoutName,description,muscleGroup,youTube))
+            except:
+                print("Problem inserting into exercises")
+                db.rollback()
+            db.commit()
+            
+            print("done!")
 
     if userType == 'admin':
         # getting the user's first and last name(only admins)
@@ -576,9 +620,82 @@ def adminCreateWorkoutPage():
         names=cur.fetchall()
         print(names)
         
-    #user and userType are being passed to the website here
-    return render_template('Theme/aCreateWorkout.html', user = verifiedUser, userType = userType, Name = names)
+    #user and userType are being passed to the website here. badName and workoutCreated are for error and success notification.
+    return render_template('Theme/aCreateWorkout.html', user = verifiedUser, userType = userType, Name = names, badName = badName, workoutCreated = workoutCreated)
 #end admin create workout page--------------------------------------------------
+
+#admin Training Programs page------------------------------------------------------    
+@app.route('/aTrainingPrograms', methods=['GET', 'POST'])
+def adminTrainingProgramsPage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    if verifiedUser == '':
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    # get all exercises from the database ...
+    rows = []
+    query = "SELECT training_program_name, sport, student FROM training_programs"
+    print query
+    cur.execute("SELECT training_program_name, sport, student FROM training_programs")
+    #if cur.fetchone():
+    rows = cur.fetchall()
+    print(rows)
+    ## For dubugging ##
+    #print(rows[0][0])
+    
+    if userType == 'admin':
+        # getting the user's first and last name(only admins)
+        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        names=cur.fetchall()
+        print(names)
+    
+    # if user typed in a post ...
+    if request.method == 'POST':
+        print "HI"
+        print "made it to post"
+        
+        #This is where we iterate through all exercises found in the database to see which one was selected.
+        action = request.form['action']
+        exercise = request.form['exercise']
+        print(action)
+        print(exercise)
+        if action == 'Edit':
+            session['exercise'] = exercise
+            return redirect(url_for('adminEditExercisesPage'))
+        if action == 'Delete':
+            confirm = request.form['confirmD']
+            print(confirm)
+            if confirm == 'Delete':
+                query = "DELETE FROM exercises WHERE exercise_name = '%s'" % (exercise,)
+                print(query)
+                try:
+                    cur.execute("DELETE FROM exercises WHERE exercise_name = %s", (exercise,))
+                except:
+                    print("Problem inserting into exercises")
+                    db.rollback()
+                db.commit()
+            return redirect(url_for('adminExercisesPage'))
+        if action == 'View':
+            session['exercise'] = exercise
+            return redirect(url_for('adminViewExercisesPage'))
+        
+    #user and userType are being passed to the website here along with the exercise data as "results".
+    return render_template('Theme/aTrainingPrograms.html', user = verifiedUser, userType = userType, Name = names, results = rows)
+#end admin training programs page--------------------------------------------------  
 
 #admin add user page------------------------------------------------------    
 @app.route('/aAddUser', methods=['GET', 'POST'])

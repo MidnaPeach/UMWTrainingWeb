@@ -3,8 +3,10 @@
     {% block siteTitle %} <title> UMW Training - Workouts </title> {% endblock %}
           
    
-            <!-- this line is magical -->
+      <!-- this line is magical -->
       {% include "adminSideMenu.html" -%}
+     
+     
       
       <!-- **********************************************************************************************************************************************************
       MAIN CONTENT
@@ -12,11 +14,11 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper site-min-height">
-          	<h3><i class="fa fa-angle-right"></i> Workouts </h3>
+          	<h3><i class="fa fa-angle-right"></i> Create Workouts </h3>
           	<div class="row mt">
           		<div class="col-lg-12">
           		
-          		<form action="POST"> 
+          		<form method = "post", action="/aCreateWorkout"> 
           		<center>
           		    <table style="color:white; background-color: #5496cf; border: 1px solid lightgrey;">
                         <tr>
@@ -27,18 +29,25 @@
                         </tr>
                         <tr>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <input type="text" name="ename" style="margin-left: 10px; margin-right: 10px;">
+                                <input type="text" name="ename" style="margin-left: 10px; margin-right: 10px;" maxlength="20">
                             </td>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <select name="emusclegroup">
-                                    <option value="etc.">Muscle Groups</option>
-                                    <option value="etc.">etc.</option>
-                                    <option value="etc.">etc.</option>
-                                    <option value="etc.">etc.</option>
+                                <center>
+                                <select name="emusclegroup" value="Muscle Groups">
+                                    <option value="Chest">Chest</option>
+                                    <option value="Arms">Arms</option>
+                                    <option value="Legs">Legs</option>
+                                    <option value="Back">Back</option>
+                                    <option value="Shoulders">Shoulders</option>
+                                    <option value="Neck">Neck</option>
+                                    <option value="Abs">Abs</option>
+                                    <option value="Upper Body">Upper Body</option>
+                                    <option value="Lower Body">Lower Body</option>
                                 </select>
+                                </center>
                             </td>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <input type="text" name="edesc" style="margin-left: 10px; margin-right: 10px;">
+                                <textarea rows="4" cols="30" name="edesc" style="margin-left: 10px; margin-right: 10px;"></textarea>
                             </td>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
                                 <input type="text" name="eyoutube" style="margin-left: 10px; margin-right: 10px;">
@@ -46,12 +55,19 @@
                         </tr>
                     </table>
                     <br>
-                        <a href="/aWorkouts">
+                        <a href="/aWorkoutsPage">
           		            <input type="submit" value="Submit"><br><br>
           		        </a>
+          		    </br>
+          		    {% if badName %}
+          		        <p style="color:red">Error: Workout name cannot be blank or match the name of an already existing workout.</p>
+          		    {% endif %}
+          		    {% if workoutCreated %}
+          		        <p style="color:black">Workout Created!</p>
+          		    {% endif %}
           		</center>
           		</form> 
-          		<p>This is where actual input will be filled in for a new exercise.</p>
+          		
           		</div>
           	</div>
 			

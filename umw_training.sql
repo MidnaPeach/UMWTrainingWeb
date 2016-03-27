@@ -24,6 +24,7 @@ INSERT INTO users (user_name, password) VALUES
 ('mpokorny', crypt('p00d13', gen_salt('bf'))),
 ('aperkins', crypt('changeme', gen_salt('bf'))),
 ('mdesorme', crypt('derp', gen_salt('bf'))),
+('braze', crypt('soccer', gen_salt('bf'))),
 ('lass', crypt('qwerty', gen_salt('bf'))),
 ('1coach', crypt('p00d13', gen_salt('bf'))),
 ('2coach', crypt('changeme', gen_salt('bf'))),
@@ -48,7 +49,8 @@ INSERT INTO admin (user_name, first_name, last_name, email) VALUES
 ('mpokorny', 'Michael', 'Pokorny', 'mpokorny@mail.umw.edu'),
 ('mdesorme', 'Michelle', 'Desormeaux', 'mdesorme@mail.umw.edu'),
 ('aperkins', 'Ann', 'Perkins', 'aperkins@mail.umw.edu'),
-('lass', 'Lazy', 'Ass', 'lass@mail.umw.edu');
+('lass', 'Lazy', 'Ass', 'lass@mail.umw.edu'),
+('braze', 'Brittany', 'Raze', 'braze@mail.umw.edu');
 
 CREATE TABLE IF NOT EXISTS coaches (
   coach_id SERIAL NOT NULL,

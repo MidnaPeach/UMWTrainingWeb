@@ -1,6 +1,8 @@
+
 {% include "topBar.html" %}
-    {% block siteTitle %} <title> UMW Training - Training Programs </title> {% endblock %}
-      
+    {% block siteTitle %} <title> UMW Training - Workouts </title> {% endblock %}
+          
+   
             <!-- this line is magical -->
       {% include "adminSideMenu.html" -%}
       
@@ -10,49 +12,45 @@
       <!--main content start-->
       <section id="main-content">
           <section class="wrapper site-min-height">
-          	<h3><i class="fa fa-angle-right"></i> Training Programs </h3>
+          	<h3><i class="fa fa-angle-right"></i> Workouts </h3>
           	<div class="row mt">
           		<div class="col-lg-12">
+          		
+          		<form action="POST"> 
           		<center>
-          		    <input type="submit" value="Create Training Program"><br><br>
-          		    <form method="post", action="/aExercisesPage">
-          		    <!--<input type="submit" value="Edit" name="Submit1">-->
-          		    <table style="color:white; background-color: #5496cf;">
+          		    <table style="color:white; background-color: #5496cf; border: 1px solid lightgrey;">
                         <tr>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sport&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Student&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid #4684db;"><center>&nbsp;&nbsp;&nbsp;Muscle Group&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Muscle Group&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Description&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Youtube Embed Link&nbsp;&nbsp;</center></td>
                         </tr>
-                        
-                        {% for result in results %}
                         <tr>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit" value="Edit" name="Submit1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center>
-                            </td>
-                            
-                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                
-                                    <center><input class="astext" type="submit" value={{result[0]}} name="Submit1" /></center>
-                                    <!-- <input type="submit" value="Submit" name="Submit1" /> -->
-                               
-                            </td>
-                            
-                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <center>&nbsp;&nbsp;{{result[1]}}&nbsp;&nbsp;</center>
+                                <input type="text" name="ename" style="margin-left: 10px; margin-right: 10px;">
                             </td>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <center>&nbsp;&nbsp;{{result[2]}}&nbsp;&nbsp;</center>
+                                <select name="emusclegroup">
+                                    <option value="etc.">Muscle Groups</option>
+                                    <option value="etc.">etc.</option>
+                                    <option value="etc.">etc.</option>
+                                    <option value="etc.">etc.</option>
+                                </select>
+                            </td>
+                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                <input type="text" name="edesc" style="margin-left: 10px; margin-right: 10px;">
+                            </td>
+                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                <input type="text" name="eyoutube" style="margin-left: 10px; margin-right: 10px;">
                             </td>
                         </tr>
-                        
-                        {% endfor %}
                     </table>
-          		    </form>
+                    <br>
+                        <a href="/aWorkouts">
+          		            <input type="submit" value="Submit"><br><br>
+          		        </a>
           		</center>
-                <br><br>
-          		<!--<p>The user can select an exercise and then choose to edit or delete it.</p>-->
+          		</form> 
           		</div>
           	</div>
 			
@@ -64,7 +62,7 @@
       <footer class="site-footer">
           <div class="text-center">
               2016 - UMW Training Program
-              <a href="aExercisesPage" class="go-top">
+              <a href="aCreateWorkout" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
           </div>
