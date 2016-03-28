@@ -506,9 +506,9 @@ def adminWorkoutsPage():
     
     # get all workouts from the database ...
     rows = []
-    query = "SELECT workout_name FROM workouts"
+    query = "select exercise_name, muscle_group, youtube_link from exercises"
     print query
-    cur.execute("SELECT workout_name FROM workouts")
+    cur.execute("select exercise_name, muscle_group, youtube_link from exercises")
     #if cur.fetchone():
     rows = cur.fetchall()
     print(rows)
@@ -624,79 +624,6 @@ def adminCreateWorkoutPage():
     return render_template('Theme/aCreateWorkout.html', user = verifiedUser, userType = userType, Name = names, badName = badName, workoutCreated = workoutCreated)
 #end admin create workout page--------------------------------------------------
 
-#admin Training Programs page------------------------------------------------------    
-@app.route('/aTrainingPrograms', methods=['GET', 'POST'])
-def adminTrainingProgramsPage():
-    if 'username' in session:
-        verifiedUser = session['username']
-    else:
-        verifiedUser = ''
-    if 'userType' in session:
-        userType = session['userType']
-    else:
-        userType = ''
-    if verifiedUser == '':
-        return redirect(url_for('login'))
-    if userType == '':
-        return redirect(url_for('login'))
-    if 'username' in session:
-        verifiedUser = session['username']
-    else:
-        verifiedUser = ''
-    db = connectToDB()
-    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    
-    # get all exercises from the database ...
-    rows = []
-    query = "SELECT training_program_name, sport, student FROM training_programs"
-    print query
-    cur.execute("SELECT training_program_name, sport, student FROM training_programs")
-    #if cur.fetchone():
-    rows = cur.fetchall()
-    print(rows)
-    ## For dubugging ##
-    #print(rows[0][0])
-    
-    if userType == 'admin':
-        # getting the user's first and last name(only admins)
-        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
-        names=cur.fetchall()
-        print(names)
-    
-    # if user typed in a post ...
-    if request.method == 'POST':
-        print "HI"
-        print "made it to post"
-        
-        #This is where we iterate through all exercises found in the database to see which one was selected.
-        action = request.form['action']
-        exercise = request.form['exercise']
-        print(action)
-        print(exercise)
-        if action == 'Edit':
-            session['exercise'] = exercise
-            return redirect(url_for('adminEditExercisesPage'))
-        if action == 'Delete':
-            confirm = request.form['confirmD']
-            print(confirm)
-            if confirm == 'Delete':
-                query = "DELETE FROM exercises WHERE exercise_name = '%s'" % (exercise,)
-                print(query)
-                try:
-                    cur.execute("DELETE FROM exercises WHERE exercise_name = %s", (exercise,))
-                except:
-                    print("Problem inserting into exercises")
-                    db.rollback()
-                db.commit()
-            return redirect(url_for('adminExercisesPage'))
-        if action == 'View':
-            session['exercise'] = exercise
-            return redirect(url_for('adminViewExercisesPage'))
-        
-    #user and userType are being passed to the website here along with the exercise data as "results".
-    return render_template('Theme/aTrainingPrograms.html', user = verifiedUser, userType = userType, Name = names, results = rows)
-#end admin training programs page--------------------------------------------------  
-
 #admin add user page------------------------------------------------------    
 @app.route('/aAddUser', methods=['GET', 'POST'])
 def adminAddUserPage():
@@ -744,6 +671,19 @@ def adminAddUserPage():
     #user and userType are being passed to the website here
     return render_template('Theme/aAddUser.html', user = verifiedUser, userType = userType, Name = names)
 #end admin add user page--------------------------------------------------  
+
+
+#Account Created Email----------------------------------------------------
+
+#pretty sure we don't need an html page for this
+def adminAddUserPage():
+
+    #Michelle is writing this
+
+#End Account Created Email------------------------------------------------
+
+
+
 
 #**********************************
 #*************STUDENT**************
