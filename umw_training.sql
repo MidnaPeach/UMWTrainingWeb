@@ -24,7 +24,6 @@ INSERT INTO users (user_name, password) VALUES
 ('mpokorny', crypt('p00d13', gen_salt('bf'))),
 ('aperkins', crypt('changeme', gen_salt('bf'))),
 ('mdesorme', crypt('derp', gen_salt('bf'))),
-('braze', crypt('soccer', gen_salt('bf'))),
 ('lass', crypt('qwerty', gen_salt('bf'))),
 ('1coach', crypt('p00d13', gen_salt('bf'))),
 ('2coach', crypt('changeme', gen_salt('bf'))),
@@ -49,8 +48,7 @@ INSERT INTO admin (user_name, first_name, last_name, email) VALUES
 ('mpokorny', 'Michael', 'Pokorny', 'mpokorny@mail.umw.edu'),
 ('mdesorme', 'Michelle', 'Desormeaux', 'mdesorme@mail.umw.edu'),
 ('aperkins', 'Ann', 'Perkins', 'aperkins@mail.umw.edu'),
-('lass', 'Lazy', 'Ass', 'lass@mail.umw.edu'),
-('braze', 'Brittany', 'Raze', 'braze@mail.umw.edu');
+('lass', 'Lazy', 'Ass', 'lass@mail.umw.edu');
 
 CREATE TABLE IF NOT EXISTS coaches (
   coach_id SERIAL NOT NULL,
@@ -186,6 +184,10 @@ CREATE TABLE IF NOT EXISTS workouts (
   PRIMARY KEY (workout_id)
 );
 
+INSERT INTO workouts (admin_id, workout_name) VALUES
+(1, 'LOWER'),
+(1, 'UPPER');
+
 CREATE TABLE IF NOT EXISTS workout_exercises (
   exercise_id INT NOT NULL references exercises(exercise_id),
   workout_id INT NOT NULL references workouts(workout_id),
@@ -194,8 +196,13 @@ CREATE TABLE IF NOT EXISTS workout_exercises (
   row_3 text,
   row_4 text,
   row_5 text,
-  commments text
+  comments text
 );
+
+--INSERT INTO workouts (exercise_id, workout_id, row_1, row_2, row3, comments) VALUES
+--(24, 2,'50/5','60/3','4x70/2','(5s on the way down)'),
+--(47, 2,'50/8','60/5','4x70/2','(5s on the way down)'),
+--(47, 3,'50/8','60/5','4x70/2','(5s on the way up)');
 
 CREATE TABLE IF NOT EXISTS training_programs (
   training_program_id SERIAL NOT NULL,

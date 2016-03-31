@@ -1,3 +1,6 @@
+<html>
+<head>
+
 {% include "topBar.html" %}
     {% block siteTitle %} <title> UMW Training - Exercises </title> {% endblock %}
       
@@ -107,19 +110,14 @@
 		</section><! --/wrapper -->
       </section><!-- /MAIN CONTENT -->
 
-      <!--main content end-->
-      <!--footer start-->
-      <footer class="site-footer">
-          <div class="text-center">
-              2016 - UMW Training Program
-              <a href="aExercisesPage" class="go-top">
-                  <i class="fa fa-angle-up"></i>
-              </a>
-          </div>
-      </footer>
-      <!--footer end-->
-  </section>
+            
 
+      <!--main content end -->
+      {% block footer %}
+              {% block goUp %} <a href="aExercisesPage" class="go-top"> {% endblock %}
+        {% endblock %}
+  </section>
+  
     <!-- js placed at the end of the document so the pages load faster -->
     <script src="assets/js/jquery.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>

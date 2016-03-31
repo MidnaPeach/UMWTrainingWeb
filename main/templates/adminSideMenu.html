@@ -71,33 +71,13 @@
                   <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class="fa fa-tasks"></i>
-                          <span>Forms</span>
+                          <span>View Student Data</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="form_component.html">Form Components</a></li>
+                          <li><a  href="">Pre-Training Answers</a></li>
+                          <li><a  href="">Training Program Stats</a></li>
                       </ul>
                   </li>
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class="fa fa-th"></i>
-                          <span>Data Tables</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  href="basic_table.html">Basic Table</a></li>
-                          <li><a  href="responsive_table.html">Responsive Table</a></li>
-                      </ul>
-                  </li>
-                  <li class="sub-menu">
-                      <a href="javascript:;" >
-                          <i class=" fa fa-bar-chart-o"></i>
-                          <span>Charts</span>
-                      </a>
-                      <ul class="sub">
-                          <li><a  href="morris.html">Morris</a></li>
-                          <li><a  href="chartjs.html">Chartjs</a></li>
-                      </ul>
-                  </li>
-
               </ul>
               <!-- sidebar menu end-->
           </div>
@@ -105,8 +85,29 @@
       <!--sidebar end-->
 <!-- this is a file Michelle is trying to make as the template for the admin menu so we don't have to keep repeating it across files -->
 
+      <!--footer start-->
+      {% block footer %}
+      <footer class="site-footer">
+          <div class="text-center">
+              2016 - UMW Training Program
+              {% block goUp %}  {% endblock %}
+                  <i class="fa fa-angle-up"></i>
+              </a>
+          </div>
+      </footer>
+      <!--footer end-->
+        {% endblock %}
 
-    
+
+        <script src="assets/js/common-scripts.js"></script>
+    <script src="static/js/jquery.js"></script>
+    <script src="static/js/jquery-1.8.3.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script class="include" type="text/javascript" src="static/js/jquery.dcjqaccordion.2.7.js"></script>
+    <script src="static/js/jquery.scrollTo.min.js"></script>
+    <script src="static/js/jquery.nicescroll.js" type="text/javascript"></script>
+    <script src="static/js/jquery.sparkline.js"></script>
 
 </head>
 </html>
+

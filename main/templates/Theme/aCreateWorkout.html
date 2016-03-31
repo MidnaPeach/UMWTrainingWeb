@@ -20,21 +20,20 @@
           		
           		<form method = "post", action="/aCreateWorkout"> 
           		<center>
+          		    <p style="margin-bottom: 20px; width: 250px;">Workout Name:<input type="text" size=12, name="name" style="margin-left: 10px; margin-right: 0px; padding-right: 0px;"></p>
           		    <table style="color:white; background-color: #5496cf; border: 1px solid lightgrey;">
                         <tr>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Muscle Group&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Description&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Youtube Embed Link&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Exercises&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
+                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Equation for one rep max&nbsp;&nbsp;</center></td>
                         </tr>
                         <tr>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <input type="text" name="ename" style="margin-left: 10px; margin-right: 10px;" maxlength="20">
-                            </td>
-                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
                                 <center>
-                                <select name="emusclegroup" value="Muscle Groups">
-                                    <option value="Chest">Chest</option>
+                                <select name="exercise", style="margin-bottom: 120px;" >
+                                    {%for exercise in exercises:%}
+                                    <option value="{{exercise[0]}}">{{exercise[0]}}</option>
+                                    {%endfor%}
+                                    <!--<option value="Chest">Chest</option>
                                     <option value="Arms">Arms</option>
                                     <option value="Legs">Legs</option>
                                     <option value="Back">Back</option>
@@ -42,15 +41,17 @@
                                     <option value="Neck">Neck</option>
                                     <option value="Abs">Abs</option>
                                     <option value="Upper Body">Upper Body</option>
-                                    <option value="Lower Body">Lower Body</option>
+                                    <option value="Lower Body">Lower Body</option>-->
                                 </select>
                                 </center>
                             </td>
-                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <textarea rows="4" cols="30" name="edesc" style="margin-left: 10px; margin-right: 10px;"></textarea>
-                            </td>
-                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <input type="text" name="eyoutube" style="margin-left: 10px; margin-right: 10px;">
+                            <td width=180px, style="color:black; background-color: white; padding: 0; border: 1px solid lightgrey;">
+                                <p style="padding-left: 7px; padding-bottom: 0px; margin-bottom: 0px; padding-right: 0px; margin-top: 5px;">row 1: <input type="text" size=12, name="row1" style="margin-left: 10px; margin-right: 0px; padding-right: 0px;"></p>
+                                <p style="padding-left: 7px; padding-bottom: 0px; margin-bottom: 0px; padding-right: 0px;">row 2: <input type="text" size=12, name="row2" style="margin-left: 10px; margin-right: 0px; padding-right: 0px;"></p>
+                                <p style="padding-left: 7px; padding-bottom: 0px; margin-bottom: 0px; padding-right: 0px;">row 3: <input type="text" size=12, name="row3" style="margin-left: 10px; margin-right: 0px; padding-right: 0px;"></p>
+                                <p style="padding-left: 7px; padding-bottom: 0px; margin-bottom: 0px; padding-right: 0px;">row 4: <input type="text" size=12, name="row4" style="margin-left: 10px; margin-right: 0px; padding-right: 0px;"></p>
+                                <p style="padding-left: 7px; padding-bottom: 0px; margin-bottom: 0px; padding-right: 0px;">row 5: <input type="text" size=12, name="row5" style="margin-left: 10px; margin-right: 0px; padding-right: 0px;"></p>
+                                <p style="padding-left: 7px; padding-bottom: 0px; margin-bottom: 5px; padding-right: 0px;">comments: <input type="text" size=7, name="comments" style="margin-left: 10px; margin-right: 0px; padding-right: 0px;"></p>
                             </td>
                         </tr>
                     </table>
