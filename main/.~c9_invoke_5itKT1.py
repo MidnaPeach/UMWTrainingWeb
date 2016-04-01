@@ -1147,7 +1147,7 @@ def adminTrainingProgramsPage():
     cur.execute("SELECT training_program_name, sport FROM training_programs")
     #if cur.fetchone():
     rows = cur.fetchall()
-    print('rows= ', rows)
+    print(rows)
     
     trainingProgramInfo = []
     query = "SELECT training_program_id, training_program_name FROM training_programs"
@@ -1155,14 +1155,14 @@ def adminTrainingProgramsPage():
     cur.execute("SELECT training_program_id, training_program_name FROM training_programs")
     #if cur.fetchone():
     trainingProgramInfo = cur.fetchall()
-    print('trainingProgramInfo= ', trainingProgramInfo)
+    print(trainingProgramInfo)
     
     trainingProgramInfoRows = []
     for row in trainingProgramInfo:
         query = "SELECT count(training_program_id) FROM training_program_workouts WHERE training_program_id = '%s';" % (row[0],)
-        print('query= ', query)
-        cur.execute("SELECT count(training_program_id) FROM training_program_workouts WHERE training_program_id = %s",(row[0],))
-        trainingProgramInfoRows.append([cur.fetchone()[0]])
+        print query
+        cur.execute("SELECT count(training_program_id) FROM training_program_workouts WHERE training_program_id = %s",(trainingProgramInfo[0],))
+        trainingProgramInfoRows.append(cur.fetchone())
     print('trainingProgramInfoRows= ', trainingProgramInfoRows)
 
     ## For dubugging ##
@@ -1223,7 +1223,7 @@ def adminTrainingProgramsPage():
         
     #user and userType are being passed to the website here along with the workout data as "results".
     return render_template('Theme/aTrainingPrograms.html', user = verifiedUser, userType = userType, Name = names, results = rows, trainingProgramInfoRows=trainingProgramInfoRows)
-#end admin Training Program page--------------------------------------------------
+    return render_template('Theme/aTrainingPrograms.html', user = verifiedUser, userType = userType, Name = names, results = rows, train)
 
 #admin add user page------------------------------------------------------    
 @app.route('/aAddUser', methods=['GET', 'POST'])

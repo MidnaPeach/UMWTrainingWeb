@@ -1055,3 +1055,157 @@ moved this next thing from shome.html
 
 
 ---------------------------------------------------------------------------------------------------1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#admin workouts page------------------------------------------------------    
+@app.route('/aWorkouts', methods=['GET', 'POST'])
+def adminWorkoutsPage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    if verifiedUser == '':
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    session['exerciseCount'] = 2
+    session['previousInput'] = [['','','','','','','']]
+    #session['previousInput'].append(['cat','','','','',''])
+    print("exerciseCount= ",session['exerciseCount'])
+    # get all workouts from the database ...
+    rows = []
+    query = "select workout_name from workouts"
+    print query
+    cur.execute("select workout_name from workouts")
+    #if cur.fetchone():
+    rows = cur.fetchall()
+    print(rows)
+    
+    workoutInfo = []
+    query = "select workout_id, workout_name from workouts"
+    print query
+    cur.execute("select workout_id, workout_name from workouts")
+    #if cur.fetchone():
+    workoutInfo = cur.fetchall()
+    print(workoutInfo)
+    
+    workoutInfoRows = []
+    for row in workoutInfo:
+        query = "select count(workout_id) from workout_exercises where workout_id = '%s';" % (row[0],)
+        print query
+        cur.execute("select count(workout_id) from workout_exercises where workout_id = %s",(row[0],))
+        workoutInfoRows.append([cur.fetchone()[0]])
+    print('workoutInfoRows= ', workoutInfoRows)
+
+    ## For dubugging ##
+    #print(rows[0][0])
+    
+    
+    
+    if userType == 'admin':
+        # getting the user's first and last name(only admins)
+        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        names=cur.fetchall()
+        print(names)
+    
+    # if user typed in a post ...
+    if request.method == 'POST':
+        print "HI"
+        print "made it to post"
+        
+        #This is where we iterate through all workouts found in the database to see which one was selected.
+        action = request.form['action']
+        workout = request.form['workout']
+        print(action)
+        print(workout)
+        if action == 'Edit':
+            session['workout'] = workout
+            return redirect(url_for('adminEditWorkoutsPage'))
+        if action == 'Delete':
+            confirm = request.form['confirmD']
+            print(confirm)
+            if confirm == 'Delete':
+                
+                query = "SELECT workout_id from workouts WHERE workout_name = '%s'" % (workout,)
+                print(query)
+                cur.execute("SELECT workout_id from workouts WHERE workout_name = %s", (workout,))
+                deleteID = cur.fetchall()[0][0]
+                print deleteID
+                
+                try:
+                    cur.execute("DELETE FROM workout_exercises WHERE workout_id = %s", (deleteID,))
+                except:
+                    print("Problem deleting from workout_exercises")
+                    db.rollback()
+                db.commit()
+                
+                query = "DELETE FROM workouts WHERE workout_id = %s" % (deleteID,)
+                print(query)
+                try:
+                    cur.execute("DELETE FROM workouts WHERE workout_id = %s", (deleteID,))
+                except:
+                    print("Problem deleting from workouts")
+                    db.rollback()
+                db.commit()
+                
+            return redirect(url_for('adminWorkoutsPage'))
+        if action == 'View':
+            print("action= ", action)
+            session['workout'] = workout
+            print(session['workout'])
+            return redirect(url_for('adminViewWorkoutsPage'))
+        
+    #user and userType are being passed to the website here along with the workout data as "results".
+    return render_template('Theme/aWorkouts.html', user = verifiedUser, userType = userType, Name = names, results = rows, workoutInfoRows = workoutInfoRows)
+#end admin workout page--------------------------------------------------  

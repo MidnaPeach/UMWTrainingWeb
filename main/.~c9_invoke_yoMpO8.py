@@ -1147,7 +1147,7 @@ def adminTrainingProgramsPage():
     cur.execute("SELECT training_program_name, sport FROM training_programs")
     #if cur.fetchone():
     rows = cur.fetchall()
-    print('rows= ', rows)
+    print(rows)
     
     trainingProgramInfo = []
     query = "SELECT training_program_id, training_program_name FROM training_programs"
@@ -1155,14 +1155,14 @@ def adminTrainingProgramsPage():
     cur.execute("SELECT training_program_id, training_program_name FROM training_programs")
     #if cur.fetchone():
     trainingProgramInfo = cur.fetchall()
-    print('trainingProgramInfo= ', trainingProgramInfo)
+    print(trainingProgramInfo)
     
     trainingProgramInfoRows = []
     for row in trainingProgramInfo:
         query = "SELECT count(training_program_id) FROM training_program_workouts WHERE training_program_id = '%s';" % (row[0],)
-        print('query= ', query)
-        cur.execute("SELECT count(training_program_id) FROM training_program_workouts WHERE training_program_id = %s",(row[0],))
-        trainingProgramInfoRows.append([cur.fetchone()[0]])
+        print query
+        cur.execute("SELECT count(training_program_id) FROM training_program_workouts WHERE training_program_id = %s",(trainingProgramInfo[0],))
+        trainingProgramInfoRows.append(cur.fetchone())
     print('trainingProgramInfoRows= ', trainingProgramInfoRows)
 
     ## For dubugging ##
@@ -1193,7 +1193,7 @@ def adminTrainingProgramsPage():
             if confirm == 'Delete':
                 
                 query = "SELECT training_program_id FROM training_programs WHERE training_program_name = '%s'" % (trainingProgram,)
-                print(query)
+                query = "SELECT training_program_id FROM training_programs WHERE training_program_name = '%s'" % (trainin,)
                 cur.execute("SELECT training_program_id FROM training_programs WHERE training_program_name = %s", (trainingProgram,))
                 deleteID = cur.fetchall()[0][0]
                 print deleteID
