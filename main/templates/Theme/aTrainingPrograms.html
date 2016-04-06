@@ -38,14 +38,14 @@
                                             <td>
                                                 <form method="post", action="/aTrainingPrograms">
                                                     <input style="margin-right: 3px; margin-left: 3px; margin-top: 5px; margin-bottom: -12px;" type="submit" value="Edit" name="action">
-                                                    <input class="astext" type="hidden" value="{{result[0]}}" name="exercise">
+                                                    <input class="astext" type="hidden" value="{{result[0]}}" name="trainingProgram">
                                                 </form>
                                             </td>
                                             <td>
                                                 <form method="post", action="/aTrainingPrograms">
                                                     <input style="margin-right: 3px; margin-top: 5px; margin-bottom: -12px;" onclick="confirmDelete()" type="submit" value="Delete" name="action">
                                                     <input class="confirm" type="hidden" value="" name="confirmD">
-                                                    <input type="hidden" value="{{result[0]}}" name="exercise">
+                                                    <input type="hidden" value="{{result[0]}}" name="trainingProgram">
                                                     
                                                     <script>
                                                     function confirmDelete() {
@@ -68,7 +68,7 @@
                                             <td>
                                                 <form method="post", action="/aTrainingPrograms">
                                                     <input style="margin-right: 3px; margin-top: 5px; margin-bottom: -12px;" type="submit" value="View" name="action">
-                                                    <input class="astext" type="hidden" value="{{result[0]}}" name="exercise">
+                                                    <input class="astext" type="hidden" value="{{result[0]}}" name="trainingProgram">
                                                 </form>
                                             </td>
                                         </tr>
