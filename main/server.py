@@ -1348,7 +1348,20 @@ def adminAddUserPage():
         
         
     #****Once a User has been added*********
-        
+    #Michelle added this here*********************
+    if request.method == 'POST':
+        if request.form['submit'] == 'submit_file':
+            print('you clicked the submit button yay')
+            # pass # neat command you can use in python, didnt know that.
+    
+            fileName = ""
+            file = open(fileName, 'r')
+            
+            for item in file:
+                print(item)    
+                
+                
+    #*******************************************
     #user and userType are being passed to the website here
     return render_template('Theme/aAddUser.html', user = verifiedUser, userType = userType, Name = names, results = rows, types = types)
 #end admin add user page--------------------------------------------------  
@@ -1358,12 +1371,8 @@ def adminAddUserPage():
 
 # this function will only be avaliable to admin so is there a need to check for the user's type at the start??
 # need to look at sequence diagram 
-def readFromCSV():
-    fileName = ""
-    file = open(fileName, 'r')
+#def readFromCSV():
     
-    for item in file:
-        print(item)
     #check user's type? *see above*
     
     #
