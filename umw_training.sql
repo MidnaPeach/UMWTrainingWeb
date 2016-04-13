@@ -25,12 +25,6 @@ INSERT INTO users (user_name, password) VALUES
 ('aperkins', crypt('changeme', gen_salt('bf'))),
 ('mdesorme', crypt('derp', gen_salt('bf'))),
 ('lass', crypt('qwerty', gen_salt('bf'))),
-('1coach', crypt('p00d13', gen_salt('bf'))),
-('2coach', crypt('changeme', gen_salt('bf'))),
-('3coach', crypt('qwerty', gen_salt('bf'))),
-('1trainer', crypt('p00d13', gen_salt('bf'))),
-('2trainer', crypt('changeme', gen_salt('bf'))),
-('3trainer', crypt('qwerty', gen_salt('bf'))),
 ('1student', crypt('p00d13', gen_salt('bf'))),
 ('2student', crypt('changeme', gen_salt('bf'))),
 ('3student', crypt('qwerty', gen_salt('bf')));

@@ -19,13 +19,14 @@
           		<div class="col-lg-12">
           		<center>
           		    <!-- this is div for the browse and submit for file button -->
-          		    <div class="addUserByFile">
+          		    <div class="addUserByFile" >
           		        <!-- here's the browse button -->
           		        <p style="text-align:left;">Add users by file upload: </p> 
           		        <input type="file" name="browse_file" style=float:left>
           		        <!-- this is the submit button -->
-          		        <input type="submit" name="submit_file" style=float:left>
-          		        
+          		        <form method="post" action="/aAddUser">
+          		            <input type="submit" value="Submit" name="submit_file" style=float:left>
+          		        </form>
           		        
           		        <p><br></p>
           		    </div>

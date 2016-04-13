@@ -1324,20 +1324,32 @@ def adminAddUserPage():
     
     # if user typed in a post ...
     if request.method == 'POST':
-        print "HI"
-        session['username'] = request.form['username']
-        print(session['username'])
+        print("Hello. I am in post.")
+        
+        #Michelle added this here*********************
+   
+        #if request.form['submit'] == 'submit_file': ### shouldn't need this. request.method == "POST" is the same thing as this. 
+                                                     ### maybe could use a check for if the file selected is ".csv"
+        print("HEEEEEEEEEEEEEEY LISTEN")
+        # THIS IS WHAT IS CAUSING THE PAGE TO CRASH ---> readFromCSV() ### there is an error for this. "IOError: [Errno 2] No such file or directory: ''"
+       
+        #*******************************************     
+        
+        ### I commented out the below coad to isolate the problem.
+        
+        #session['username'] = request.form['username']
+        #print(session['username'])
 
-        pw = request.form['pw']
-        query = "SELECT * FROM users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
-        print query
-        cur.execute("SELECT * FROM users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
-        if cur.fetchone():
-            verifiedUser = session['username']
-            return redirect(url_for('adminHome'))
-        else:
-            verifiedUser = ''
-            session['username'] = ''
+        #pw = request.form['pw']
+        #query = "SELECT * FROM users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        #print query
+        #cur.execute("SELECT * FROM users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        #if cur.fetchone():
+        #    verifiedUser = session['username']
+        #    return redirect(url_for('adminHome'))
+        #else:
+        #    verifiedUser = ''
+        #    session['username'] = ''
 
     if userType == 'admin':
         # getting the user's first and last name(only admins)
@@ -1348,20 +1360,7 @@ def adminAddUserPage():
         
         
     #****Once a User has been added*********
-    #Michelle added this here*********************
-    if request.method == 'POST':
-        if request.form['submit'] == 'submit_file':
-            print('you clicked the submit button yay')
-            # pass # neat command you can use in python, didnt know that.
-    
-            fileName = ""
-            file = open(fileName, 'r')
-            
-            for item in file:
-                print(item)    
-                
-                
-    #*******************************************
+
     #user and userType are being passed to the website here
     return render_template('Theme/aAddUser.html', user = verifiedUser, userType = userType, Name = names, results = rows, types = types)
 #end admin add user page--------------------------------------------------  
@@ -1371,10 +1370,16 @@ def adminAddUserPage():
 
 # this function will only be avaliable to admin so is there a need to check for the user's type at the start??
 # need to look at sequence diagram 
-#def readFromCSV():
-    
+def readFromCSV():
+    print('*****************************************you did a thing')
+    fileName = ""
+    file = open(fileName, 'r')
+            
+    for item in file:
+        print(item)
+
     #check user's type? *see above*
-    
+    return('HEY LISTEN')
     #
   #this junk is a lot more confusing that I thought simply reading in from csv would be.
   #still doing research, some good sites:
