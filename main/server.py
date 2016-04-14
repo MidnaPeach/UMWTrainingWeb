@@ -28,7 +28,7 @@ def connectToDB():
     print connectionString
     try:
         print("Connected to database")
-        print(psycopg2.connect(connectionString))
+        #print(psycopg2.connect(connectionString))
         return psycopg2.connect(connectionString)
     except:
         print("Can't connect to database")
@@ -51,53 +51,36 @@ def login():
     cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     # if user typed in a post ...
     if request.method == 'POST':
-      print "HI"
       session['username'] = request.form['username']
-      print(session['username'])
+      print('you are user:', session['username'])
 
       pw = request.form['pw']
       query = "SELECT * FROM users WHERE user_name = '%s' AND password = crypt('****************', password)" % (session['username'],)
-      print query
+      #print query
       cur.execute("SELECT * FROM users WHERE user_name = %s AND password = crypt(%s, password)", (session['username'], pw))
       if cur.fetchone():
          verifiedUser = session['username']
          session['loginError'] = False
+         #Admins--------------------
          cur.execute("SELECT * FROM admin WHERE user_name = %s", (verifiedUser,))
          if cur.fetchone():
             session['userType'] = 'admin'
             query = "SELECT admin_id FROM admin WHERE user_name = '%s'" % (session['username'],)
-            print query
+       #     print query
             cur.execute("SELECT admin_id FROM admin WHERE user_name = %s", (session['username'],))
             session['ID'] = cur.fetchall()
             session['ID'] = session['ID'][0][0]
-            print session['ID']
+        #    print session['ID']
+         #Students--------------------
          cur.execute("SELECT * FROM students WHERE user_name = %s", (verifiedUser,))
          if cur.fetchone():
             session['userType'] = 'student'
             query = "SELECT student_id FROM students WHERE user_name = '%s'" % (session['username'],)
-            print query
+         #   print query
             cur.execute("SELECT student_id FROM students WHERE user_name = %s", (session['username'],))
             session['ID'] = cur.fetchall()
             session['ID'] = session['ID'][0][0]
-            print session['ID']
-         cur.execute("SELECT * FROM coaches WHERE user_name = %s", (verifiedUser,))
-         if cur.fetchone():
-            session['userType'] = 'coach'
-            query = "SELECT coach_id FROM coaches WHERE user_name = '%s'" % (session['username'],)
-            print query
-            cur.execute("SELECT coach_id FROM coaches WHERE user_name = %s", (session['username'],))
-            session['ID'] = cur.fetchall()
-            session['ID'] = session['ID'][0][0]
-            print session['ID']
-         cur.execute("SELECT * FROM trainers WHERE user_name = %s", (verifiedUser,))
-         if cur.fetchone():
-            session['userType'] = 'trainer'
-            query = "SELECT trainer_id FROM trainers WHERE user_name = '%s'" % (session['username'],)
-            print query
-            cur.execute("SELECT trainer_id FROM trainers WHERE user_name = %s", (session['username'],))
-            session['ID'] = cur.fetchall()
-            session['ID'] = session['ID'][0][0]
-            print session['ID']
+          #  print session['ID']
          
          if session['userType'] == 'admin':
             return redirect(url_for('adminHome'))
@@ -109,8 +92,6 @@ def login():
          session['loginError'] = True
          loginError = session['loginError']
     return render_template('index.html', user = verifiedUser, loginError = loginError)
-
-    #return render_template('index.html')
 #end login----------------------------------------------------------------------------------------------------
 
 #**********************************
@@ -159,7 +140,7 @@ def adminHome():
         # getting the user's first and last name(only admins)
         cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
         names=cur.fetchall()
-        print(names)
+        #print(names)
         
     #user and userType are being passed to the website here
     return render_template('Theme/aHome.html', user = verifiedUser, userType = userType, Name = names)
@@ -254,7 +235,6 @@ def adminExercisesPage():
     
     # if user typed in a post ...
     if request.method == 'POST':
-        print "HI"
         print "made it to post"
         
         #This is where we iterate through all exercises found in the database to see which one was selected.
@@ -1252,18 +1232,14 @@ def adminAddUserPage():
         verifiedUser = session['username']
     else:
         verifiedUser = ''
+        return redirect(url_for('login'))
+    
     if 'userType' in session:
         userType = session['userType']
     else:
         userType = ''
-    if verifiedUser == '':
         return redirect(url_for('login'))
-    if userType == '':
-        return redirect(url_for('login'))
-    if 'username' in session:
-        verifiedUser = session['username']
-    else:
-        verifiedUser = ''
+    
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
@@ -1272,84 +1248,55 @@ def adminAddUserPage():
     types = []
     
     query = "SELECT user_name, first_name, last_name, email FROM admin"
-    print query
+    #print query
     cur.execute("SELECT user_name, first_name, last_name, email FROM admin")
     rows = cur.fetchall()
     thisType = ['Admin']
     from itertools import repeat
     thisType = [x for item in thisType for x in repeat(item, cur.rowcount)]
     types = types + thisType
-    print(rows)
-    print(types)
-    print("rowcount= ",cur.rowcount)
+    #print(rows)
+    #print(types)
+    #print("rowcount= ",cur.rowcount)
     
     query = "SELECT user_name, first_name, last_name, email FROM students"
-    print query
+    #print query
     cur.execute("SELECT user_name, first_name, last_name, email FROM students")
     rows = rows + cur.fetchall()
     thisType = ['Student']
     from itertools import repeat
     thisType = [x for item in thisType for x in repeat(item, cur.rowcount)]
     types = types + thisType
-    print(rows)
-    print(types)
-    print("rowcount= ",cur.rowcount)
-    
-    query = "SELECT user_name, first_name, last_name, email FROM coaches"
-    print query
-    cur.execute("SELECT user_name, first_name, last_name, email FROM coaches")
-    rows = rows + cur.fetchall()
-    thisType = ['Coach']
-    from itertools import repeat
-    thisType = [x for item in thisType for x in repeat(item, cur.rowcount)]
-    types = types + thisType
-    print(rows)
-    print(types)
-    print("rowcount= ",cur.rowcount)
-    
-    query = "SELECT user_name, first_name, last_name, email FROM trainers"
-    print query
-    cur.execute("SELECT user_name, first_name, last_name, email FROM trainers")
-    rows = rows + cur.fetchall()
-    thisType = ['Trainer']
-    from itertools import repeat
-    thisType = [x for item in thisType for x in repeat(item, cur.rowcount)]
-    types = types + thisType
-    print(rows)
-    print(types)
-    print("rowcount= ",cur.rowcount)
+    #print(rows)
+    #print(types)
+    #print("rowcount= ",cur.rowcount)
     
     ## For dubugging ##
     #print(rows[0][0])
     
     # if user typed in a post ...
     if request.method == 'POST':
-        print("Hello. I am in post.")
+        #****This part is for the add multiple users submit button*****
+        #grab the file extension of the file selected
+        if 'browse_file' in request.form:
+            print('you clicked the button to select a file')
+            if 'browse_file' in request.files:
+                print('in browse')
+                file = request.files['browse_file']
+                print("the file name is ", file)
+            else:
+                print('browse_file wasnt in request.files')
         
-        #Michelle added this here*********************
-   
-        #if request.form['submit'] == 'submit_file': ### shouldn't need this. request.method == "POST" is the same thing as this. 
-                                                     ### maybe could use a check for if the file selected is ".csv"
-        print("HEEEEEEEEEEEEEEY LISTEN")
-        # THIS IS WHAT IS CAUSING THE PAGE TO CRASH ---> readFromCSV() ### there is an error for this. "IOError: [Errno 2] No such file or directory: ''"
+        #when user hits submit button
+        if 'submit_file' in request.form: 
+            print("You hit the file submit button!")
+            #if fileType in acceptedFileTypes:
+            #readFromCSV()
+        else:
+            print('something else happened')
        
         #*******************************************     
-        
-        ### I commented out the below coad to isolate the problem.
-        
-        #session['username'] = request.form['username']
-        #print(session['username'])
-
-        #pw = request.form['pw']
-        #query = "SELECT * FROM users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
-        #print query
-        #cur.execute("SELECT * FROM users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
-        #if cur.fetchone():
-        #    verifiedUser = session['username']
-        #    return redirect(url_for('adminHome'))
-        #else:
-        #    verifiedUser = ''
-        #    session['username'] = ''
+            
 
     if userType == 'admin':
         # getting the user's first and last name(only admins)
@@ -1368,37 +1315,34 @@ def adminAddUserPage():
 #Read in From File to Database----------------------------------------------
 #Michelle is writing the part where it reads in the file and saves it as variables
 
-# this function will only be avaliable to admin so is there a need to check for the user's type at the start??
-# need to look at sequence diagram 
 def readFromCSV():
-    print('*****************************************you did a thing')
+    print('you got to the read from csv function')
     fileName = ""
     file = open(fileName, 'r')
             
     for item in file:
         print(item)
 
-    #check user's type? *see above*
-    return('HEY LISTEN')
-    #
-  #this junk is a lot more confusing that I thought simply reading in from csv would be.
-  #still doing research, some good sites:
-  #http://flask-excel.readthedocs.org/en/latest/
+    return('HEY LISTEN. we''re done.')
+  
+  
+  
+  # this junk is a lot more confusing that I thought simply reading in from csv would be.
+  # still doing research, some good sites:
+  #  http://flask-excel.readthedocs.org/en/latest/
   #  http://stackoverflow.com/questions/27338891/python-flask-writing-to-a-csv-file-and-reading-it
-  # http://flask.pocoo.org/docs/0.10/patterns/fileuploads/ 
-  
+  #  http://flask.pocoo.org/docs/0.10/patterns/fileuploads/ 
  
- #okay there is a python csv reader. here: https://docs.python.org/2/library/csv.html
- 
-  
+  #okay there is a python csv reader. here: https://docs.python.org/2/library/csv.html
   #we might be able to use whatever this is since it's just python - not technically flask - https://github.com/eyeseast/python-tablefu
- #   return
+
+#---------------------------------------------------------------------
+
+
+
 
 
 #Account Created Email----------------------------------------------------
-
-#pretty sure we don't need an html page for this <-- yeah this can be handled in the page adminAddUserPage() *Michael*
-#Michelle is writing this
 
 #read in from csv has been priority bumped, and the email being sent out will happen after that has been imported correctly 
 
@@ -1507,7 +1451,6 @@ def studentCalendarPage():
     #user and userType are being passed to the website here
     return render_template('Theme/scalendar.html', user = verifiedUser, userType = userType, Name = names)
 #end studentCalendarPage------------------------------------------------------------    
-    
     
     
     

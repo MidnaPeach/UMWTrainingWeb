@@ -20,14 +20,13 @@
           		<center>
           		    <!-- this is div for the browse and submit for file button -->
           		    <div class="addUserByFile" >
-          		        <!-- here's the browse button -->
           		        <p style="text-align:left;">Add users by file upload: </p> 
-          		        <input type="file" name="browse_file" style=float:left>
-          		        <!-- this is the submit button -->
-          		        <form method="post" action="/aAddUser">
-          		            <input type="submit" value="Submit" name="submit_file" style=float:left>
-          		        </form>
-          		        
+          		            <form method="post" action="/aAddUser" enctype=multipart/form-data>
+              		            <!-- this is the browse button -->
+              		            <input type="file" value="Browse" name="browse_file" style=float:left>
+          		                <!-- this is the submit button -->
+          		                <input type="submit" value="Submit File" name="submit_file" style=float:left>
+          		            </form>
           		        <p><br></p>
           		    </div>
           		    <!--<a href="/aAddUser">

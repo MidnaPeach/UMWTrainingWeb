@@ -56,45 +56,45 @@ def login():
       print(session['username'])
 
       pw = request.form['pw']
-      query = "select * from users WHERE user_name = '%s' AND password = crypt('****************', password)" % (session['username'],)
+      query = "SELECT * FROM users WHERE user_name = '%s' AND password = crypt('****************', password)" % (session['username'],)
       print query
-      cur.execute("select * from users WHERE user_name = %s AND password = crypt(%s, password)", (session['username'], pw))
+      cur.execute("SELECT * FROM users WHERE user_name = %s AND password = crypt(%s, password)", (session['username'], pw))
       if cur.fetchone():
          verifiedUser = session['username']
          session['loginError'] = False
-         cur.execute("select * from admin WHERE user_name = %s", (verifiedUser,))
+         cur.execute("SELECT * FROM admin WHERE user_name = %s", (verifiedUser,))
          if cur.fetchone():
             session['userType'] = 'admin'
-            query = "select admin_id from admin WHERE user_name = '%s'" % (session['username'],)
+            query = "SELECT admin_id FROM admin WHERE user_name = '%s'" % (session['username'],)
             print query
-            cur.execute("select admin_id from admin WHERE user_name = %s", (session['username'],))
+            cur.execute("SELECT admin_id FROM admin WHERE user_name = %s", (session['username'],))
             session['ID'] = cur.fetchall()
             session['ID'] = session['ID'][0][0]
             print session['ID']
-         cur.execute("select * from students WHERE user_name = %s", (verifiedUser,))
+         cur.execute("SELECT * FROM students WHERE user_name = %s", (verifiedUser,))
          if cur.fetchone():
             session['userType'] = 'student'
-            query = "select student_id from students WHERE user_name = '%s'" % (session['username'],)
+            query = "SELECT student_id FROM students WHERE user_name = '%s'" % (session['username'],)
             print query
-            cur.execute("select student_id from students WHERE user_name = %s", (session['username'],))
+            cur.execute("SELECT student_id FROM students WHERE user_name = %s", (session['username'],))
             session['ID'] = cur.fetchall()
             session['ID'] = session['ID'][0][0]
             print session['ID']
-         cur.execute("select * from coaches WHERE user_name = %s", (verifiedUser,))
+         cur.execute("SELECT * FROM coaches WHERE user_name = %s", (verifiedUser,))
          if cur.fetchone():
             session['userType'] = 'coach'
-            query = "select coach_id from coaches WHERE user_name = '%s'" % (session['username'],)
+            query = "SELECT coach_id FROM coaches WHERE user_name = '%s'" % (session['username'],)
             print query
-            cur.execute("select coach_id from coaches WHERE user_name = %s", (session['username'],))
+            cur.execute("SELECT coach_id FROM coaches WHERE user_name = %s", (session['username'],))
             session['ID'] = cur.fetchall()
             session['ID'] = session['ID'][0][0]
             print session['ID']
-         cur.execute("select * from trainers WHERE user_name = %s", (verifiedUser,))
+         cur.execute("SELECT * FROM trainers WHERE user_name = %s", (verifiedUser,))
          if cur.fetchone():
             session['userType'] = 'trainer'
-            query = "select trainer_id from trainers WHERE user_name = '%s'" % (session['username'],)
+            query = "SELECT trainer_id FROM trainers WHERE user_name = '%s'" % (session['username'],)
             print query
-            cur.execute("select trainer_id from trainers WHERE user_name = %s", (session['username'],))
+            cur.execute("SELECT trainer_id FROM trainers WHERE user_name = %s", (session['username'],))
             session['ID'] = cur.fetchall()
             session['ID'] = session['ID'][0][0]
             print session['ID']
@@ -145,9 +145,9 @@ def adminHome():
         print(session['username'])
 
         pw = request.form['pw']
-        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        query = "SELECT * FROM users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
         print query
-        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        cur.execute("SELECT * FROM users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
         if cur.fetchone():
             verifiedUser = session['username']
             return redirect(url_for('adminHome'))
@@ -193,9 +193,9 @@ def adminCalendarPage():
         print(session['username'])
 
         pw = request.form['pw']
-        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        query = "SELECT * FROM users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
         print query
-        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        cur.execute("SELECT * FROM users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
         if cur.fetchone():
             verifiedUser = session['username']
             return redirect(url_for('adminHome'))
@@ -237,9 +237,9 @@ def adminExercisesPage():
     
     # get all exercises from the database ...
     rows = []
-    query = "select exercise_name, muscle_group, youtube_link from exercises"
+    query = "SELECT exercise_name, muscle_group, youtube_link FROM exercises"
     print query
-    cur.execute("select exercise_name, muscle_group, youtube_link from exercises")
+    cur.execute("SELECT exercise_name, muscle_group, youtube_link FROM exercises")
     #if cur.fetchone():
     rows = cur.fetchall()
     print(rows)
@@ -274,7 +274,7 @@ def adminExercisesPage():
                 try:
                     cur.execute("DELETE FROM exercises WHERE exercise_name = %s", (exercise,))
                 except:
-                    print("Problem inserting into exercises")
+                    print("Problem deleting from exercises")
                     db.rollback()
                 db.commit()
             return redirect(url_for('adminExercisesPage'))
@@ -314,9 +314,9 @@ def adminViewExercisesPage():
     
     # get all data for the exercise ...
     rows = []
-    query = "select exercise_name, muscle_group, description, youtube_link from exercises where exercise_name = '%s'" % (exercise,)
+    query = "SELECT exercise_name, muscle_group, description, youtube_link FROM exercises WHERE exercise_name = '%s'" % (exercise,)
     print query
-    cur.execute("select exercise_name, muscle_group, description, youtube_link from exercises where exercise_name = %s",(exercise,))
+    cur.execute("SELECT exercise_name, muscle_group, description, youtube_link FROM exercises WHERE exercise_name = %s",(exercise,))
     rows = cur.fetchall()
     print(rows)
     ## For dubugging ##
@@ -362,9 +362,9 @@ def adminEditExercisesPage():
     
     # get all data for the exercise ...
     rows = []
-    query = "select exercise_name, muscle_group, description, youtube_link from exercises where exercise_name = '%s'" % (exercise,)
+    query = "SELECT exercise_name, muscle_group, description, youtube_link FROM exercises WHERE exercise_name = '%s'" % (exercise,)
     print query
-    cur.execute("select exercise_name, muscle_group, description, youtube_link from exercises where exercise_name = %s",(exercise,))
+    cur.execute("SELECT exercise_name, muscle_group, description, youtube_link FROM exercises WHERE exercise_name = %s",(exercise,))
     rows = cur.fetchall()
     print(rows)
     ## For dubugging ##
@@ -388,9 +388,9 @@ def adminEditExercisesPage():
         youTube = request.form['eyoutube']
         print(youTube)
         
-        query = "select exercise_name from exercises WHERE exercise_name = '%s'" % (exerciseName,)
+        query = "SELECT exercise_name FROM exercises WHERE exercise_name = '%s'" % (exerciseName,)
         print query
-        cur.execute("select exercise_name from exercises WHERE exercise_name = %s", (exerciseName,))
+        cur.execute("SELECT exercise_name FROM exercises WHERE exercise_name = %s", (exerciseName,))
         if cur.fetchone() and exerciseName != exercise:
             badName = True
         elif exerciseName == '':
@@ -409,7 +409,7 @@ def adminEditExercisesPage():
             session['exercise'] = exerciseName
             exercise = exerciseName
             # get the newly updated exercies ready for display
-            cur.execute("select exercise_name, muscle_group, description, youtube_link from exercises where exercise_name = %s",(exercise,))
+            cur.execute("SELECT exercise_name, muscle_group, description, youtube_link FROM exercises WHERE exercise_name = %s",(exercise,))
             rows = cur.fetchall()
             print("done!")
     #user, userType, names, and all data for the exercise are being passed to the website here. badName and exerciseEdited are for error and success notification.
@@ -453,9 +453,9 @@ def adminCreateExercisePage():
         youTube = request.form['eyoutube']
         print(youTube)
         
-        query = "select exercise_name from exercises WHERE exercise_name = '%s'" % (exerciseName,)
+        query = "SELECT exercise_name FROM exercises WHERE exercise_name = '%s'" % (exerciseName,)
         print query
-        cur.execute("select exercise_name from exercises WHERE exercise_name = %s", (exerciseName,))
+        cur.execute("SELECT exercise_name FROM exercises WHERE exercise_name = %s", (exerciseName,))
         if cur.fetchone():
             badName = True
             #return redirect(url_for('adminCreateExercisePage'))
@@ -513,17 +513,17 @@ def adminWorkoutsPage():
     print("exerciseCount= ",session['exerciseCount'])
     # get all workouts from the database ...
     rows = []
-    query = "select workout_name from workouts"
+    query = "SELECT workout_name FROM workouts"
     print query
-    cur.execute("select workout_name from workouts")
+    cur.execute("SELECT workout_name FROM workouts")
     #if cur.fetchone():
     rows = cur.fetchall()
     print(rows)
     
     workoutInfo = []
-    query = "select workout_id, workout_name from workouts"
+    query = "SELECT workout_id, workout_name FROM workouts"
     print query
-    cur.execute("select workout_id, workout_name from workouts")
+    cur.execute("SELECT workout_id, workout_name FROM workouts")
     #if cur.fetchone():
     workoutInfo = cur.fetchall()
     print(workoutInfo)
@@ -531,9 +531,9 @@ def adminWorkoutsPage():
     workoutInfoRows = []
     
     for row in workoutInfo:
-        query = "select count(workout_id) from workout_exercises where workout_id = '%s';" % (row[0],)
+        query = "SELECT count(workout_id) FROM workout_exercises WHERE workout_id = '%s';" % (row[0],)
         print query
-        cur.execute("select count(workout_id) from workout_exercises where workout_id = %s",(row[0],))
+        cur.execute("SELECT count(workout_id) FROM workout_exercises WHERE workout_id = %s",(row[0],))
         workoutInfoRows.append([cur.fetchone()[0]])
     print('workoutInfoRows= ', workoutInfoRows)
 
@@ -566,9 +566,9 @@ def adminWorkoutsPage():
             print(confirm)
             if confirm == 'Delete':
                 
-                query = "SELECT workout_id from workouts WHERE workout_name = '%s'" % (workout,)
+                query = "SELECT workout_id FROM workouts WHERE workout_name = '%s'" % (workout,)
                 print(query)
-                cur.execute("SELECT workout_id from workouts WHERE workout_name = %s", (workout,))
+                cur.execute("SELECT workout_id FROM workouts WHERE workout_name = %s", (workout,))
                 deleteID = cur.fetchall()[0][0]
                 print deleteID
                 
@@ -629,9 +629,9 @@ def adminCreateWorkoutPage():
         session['exerciseCount'] = 2
         print("exerciseCount= ",session['exerciseCount'])
     
-    query = "select exercise_name from exercises"
+    query = "SELECT exercise_name FROM exercises"
     print query
-    cur.execute("select exercise_name from exercises")
+    cur.execute("SELECT exercise_name FROM exercises")
     
     
     exercises = cur.fetchall()
@@ -703,9 +703,9 @@ def adminCreateWorkoutPage():
             workoutName = request.form['name']
             print(workoutName)
         
-            query = "select workout_name from workouts WHERE workout_name = '%s'" % (workoutName,)
+            query = "SELECT workout_name FROM workouts WHERE workout_name = '%s'" % (workoutName,)
             print query
-            cur.execute("select workout_name from workouts WHERE workout_name = %s", (workoutName,))
+            cur.execute("SELECT workout_name FROM workouts WHERE workout_name = %s", (workoutName,))
             if cur.fetchone():
                 badName = True
                 #workoutName = request.form['name']
@@ -1017,13 +1017,13 @@ def adminCreateWorkoutPage():
                         comments = request.form['comments'+str(i)]
                         print(comments)
                 
-                        query = "select exercise_id from exercises where exercise_name = '%s'" % (exercise,)
+                        query = "SELECT exercise_id FROM exercises WHERE exercise_name = '%s'" % (exercise,)
                         print query
-                        cur.execute("select exercise_id from exercises where exercise_name = %s", (exercise,))
+                        cur.execute("SELECT exercise_id FROM exercises WHERE exercise_name = %s", (exercise,))
                         exerciseID = cur.fetchall()
-                        query = "select workout_id from workouts where workout_name = '%s'" % (workoutName,)
+                        query = "SELECT workout_id FROM workouts WHERE workout_name = '%s'" % (workoutName,)
                         print query
-                        cur.execute("select workout_id from workouts where workout_name = %s", (workoutName,))
+                        cur.execute("SELECT workout_id FROM workouts WHERE workout_name = %s", (workoutName,))
                         workoutID = cur.fetchall()
                     
                         print("exerciseID=", exerciseID)
@@ -1081,22 +1081,22 @@ def adminViewWorkoutsPage():
     workoutsTable = []
     exercises = []
     rows = []
-    query = "select workout_name, workout_id from workouts where workout_name = '%s'" % (workout,)
+    query = "SELECT workout_name, workout_id FROM workouts WHERE workout_name = '%s'" % (workout,)
     print query
-    cur.execute("select workout_name, workout_id from workouts where workout_name = %s",(workout,))
+    cur.execute("SELECT workout_name, workout_id FROM workouts WHERE workout_name = %s",(workout,))
     workoutsTable = cur.fetchall()
     print(workoutsTable)
 
-    query = "select exercise_id, row_1, row_2, row_3, row_4, row_5, comments from workout_exercises where workout_id = '%s'" % (workoutsTable[0][1],)
+    query = "SELECT exercise_id, row_1, row_2, row_3, row_4, row_5, comments FROM workout_exercises WHERE workout_id = '%s'" % (workoutsTable[0][1],)
     print query
-    cur.execute("select exercise_id, row_1, row_2, row_3, row_4, row_5, comments from workout_exercises where workout_id = %s",(workoutsTable[0][1],))
+    cur.execute("SELECT exercise_id, row_1, row_2, row_3, row_4, row_5, comments FROM workout_exercises WHERE workout_id = %s",(workoutsTable[0][1],))
     rows = cur.fetchall()
     print(rows)
     
     for row in rows:
-        query = "select exercise_name from exercises where exercise_id = '%s'" % (row[0],)
+        query = "SELECT exercise_name FROM exercises WHERE exercise_id = '%s'" % (row[0],)
         print query
-        cur.execute("select exercise_name from exercises where exercise_id = %s",(row[0],))
+        cur.execute("SELECT exercise_name FROM exercises WHERE exercise_id = %s",(row[0],))
         exercises.append(cur.fetchall())
         print(exercises)
     
@@ -1112,7 +1112,27 @@ def adminViewWorkoutsPage():
     
     #user, userType, names, and all data for the exercise are being passed to the website here. 
     return render_template('Theme/aViewWorkouts.html', user = verifiedUser, userType = userType, Name = names, results = rows, workout = workout, workoutsTable = workoutsTable, exercises = exercises)
-#end admin view workouts page-------------------------------------------------- 
+#end admin view workouts page--------------------------------------------------
+@app.route('/aEditWorkouts', methods = ['GET', 'POST'])
+def adminEditWorkoutsPage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    if verifiedUser == '':
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 #admin training programs page------------------------------------------------------    
 @app.route('/aTrainingPrograms', methods=['GET', 'POST'])
@@ -1147,7 +1167,7 @@ def adminTrainingProgramsPage():
     cur.execute("SELECT training_program_name, sport FROM training_programs")
     #if cur.fetchone():
     rows = cur.fetchall()
-    print(rows)
+    print('rows= ', rows)
     
     trainingProgramInfo = []
     query = "SELECT training_program_id, training_program_name FROM training_programs"
@@ -1155,14 +1175,14 @@ def adminTrainingProgramsPage():
     cur.execute("SELECT training_program_id, training_program_name FROM training_programs")
     #if cur.fetchone():
     trainingProgramInfo = cur.fetchall()
-    print(trainingProgramInfo)
+    print('trainingProgramInfo= ', trainingProgramInfo)
     
     trainingProgramInfoRows = []
     for row in trainingProgramInfo:
         query = "SELECT count(training_program_id) FROM training_program_workouts WHERE training_program_id = '%s';" % (row[0],)
-        print query
-        cur.execute("SELECT count(training_program_id) FROM training_program_workouts WHERE training_program_id = %s",(trainingProgramInfo[0],))
-        trainingProgramInfoRows.append(cur.fetchone())
+        print('query= ', query)
+        cur.execute("SELECT count(training_program_id) FROM training_program_workouts WHERE training_program_id = %s",(row[0],))
+        trainingProgramInfoRows.append([cur.fetchone()[0]])
     print('trainingProgramInfoRows= ', trainingProgramInfoRows)
 
     ## For dubugging ##
@@ -1246,22 +1266,89 @@ def adminAddUserPage():
         verifiedUser = ''
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    # get all exercises from the database ...
+    rows = []
+    types = []
+    
+    query = "SELECT user_name, first_name, last_name, email FROM admin"
+    print query
+    cur.execute("SELECT user_name, first_name, last_name, email FROM admin")
+    rows = cur.fetchall()
+    thisType = ['Admin']
+    from itertools import repeat
+    thisType = [x for item in thisType for x in repeat(item, cur.rowcount)]
+    types = types + thisType
+    print(rows)
+    print(types)
+    print("rowcount= ",cur.rowcount)
+    
+    query = "SELECT user_name, first_name, last_name, email FROM students"
+    print query
+    cur.execute("SELECT user_name, first_name, last_name, email FROM students")
+    rows = rows + cur.fetchall()
+    thisType = ['Student']
+    from itertools import repeat
+    thisType = [x for item in thisType for x in repeat(item, cur.rowcount)]
+    types = types + thisType
+    print(rows)
+    print(types)
+    print("rowcount= ",cur.rowcount)
+    
+    query = "SELECT user_name, first_name, last_name, email FROM coaches"
+    print query
+    cur.execute("SELECT user_name, first_name, last_name, email FROM coaches")
+    rows = rows + cur.fetchall()
+    thisType = ['Coach']
+    from itertools import repeat
+    thisType = [x for item in thisType for x in repeat(item, cur.rowcount)]
+    types = types + thisType
+    print(rows)
+    print(types)
+    print("rowcount= ",cur.rowcount)
+    
+    query = "SELECT user_name, first_name, last_name, email FROM trainers"
+    print query
+    cur.execute("SELECT user_name, first_name, last_name, email FROM trainers")
+    rows = rows + cur.fetchall()
+    thisType = ['Trainer']
+    from itertools import repeat
+    thisType = [x for item in thisType for x in repeat(item, cur.rowcount)]
+    types = types + thisType
+    print(rows)
+    print(types)
+    print("rowcount= ",cur.rowcount)
+    
+    ## For dubugging ##
+    #print(rows[0][0])
+    
     # if user typed in a post ...
     if request.method == 'POST':
-        print "HI"
+        print("Hello. I am in post.")
+        
+        
         session['username'] = request.form['username']
         print(session['username'])
 
         pw = request.form['pw']
-        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        query = "SELECT * FROM users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
         print query
-        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        cur.execute("SELECT * FROM users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
         if cur.fetchone():
             verifiedUser = session['username']
             return redirect(url_for('adminHome'))
         else:
             verifiedUser = ''
             session['username'] = ''
+            
+        #****This part is for the add multiple users submit button   
+        #Michelle added this here*********************
+        if request.form['submit'] == 'submit_users_file': 
+            #if fileType in acceptedFileTypes:
+            readFromCSV()
+       
+        #*******************************************     
+            
 
     if userType == 'admin':
         # getting the user's first and last name(only admins)
@@ -1272,9 +1359,9 @@ def adminAddUserPage():
         
         
     #****Once a User has been added*********
-        
+
     #user and userType are being passed to the website here
-    return render_template('Theme/aAddUser.html', user = verifiedUser, userType = userType, Name = names)
+    return render_template('Theme/aAddUser.html', user = verifiedUser, userType = userType, Name = names, results = rows, types = types)
 #end admin add user page--------------------------------------------------  
 
 #Read in From File to Database----------------------------------------------
@@ -1282,10 +1369,16 @@ def adminAddUserPage():
 
 # this function will only be avaliable to admin so is there a need to check for the user's type at the start??
 # need to look at sequence diagram 
-#def readFromCSV():
-    
+def readFromCSV():
+    print('********you did a thing')
+    fileName = ""
+    file = open(fileName, 'r')
+            
+    for item in file:
+        print(item)
+
     #check user's type? *see above*
-    
+    return('HEY LISTEN')
     #
   #this junk is a lot more confusing that I thought simply reading in from csv would be.
   #still doing research, some good sites:
@@ -1346,9 +1439,9 @@ def studentHome():
         print(session['username'])
 
         pw = request.form['pw']
-        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        query = "SELECT * FROM users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
         print query
-        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        cur.execute("SELECT * FROM users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
         if cur.fetchone():
             verifiedUser = session['username']
             return redirect(url_for('studentHome'))
@@ -1358,7 +1451,7 @@ def studentHome():
             
     if userType == 'student':
         # getting the user's first and last name(only students)
-        cur.execute("select first_name, last_name from students WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        cur.execute("SELECT first_name, last_name FROM students WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
         names=cur.fetchall()
         print(names)
     
@@ -1394,9 +1487,9 @@ def studentCalendarPage():
         print(session['username'])
 
         pw = request.form['pw']
-        query = "select * from users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
+        query = "SELECT * FROM users WHERE username = '%s' AND password = crypt('%s', password)" % (session['username'], pw)
         print query
-        cur.execute("select * from users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
+        cur.execute("SELECT * FROM users WHERE username = %s AND password = crypt(%s, password)", (session['username'], pw))
         if cur.fetchone():
             verifiedUser = session['username']
             return redirect(url_for('studentHome'))
@@ -1406,7 +1499,7 @@ def studentCalendarPage():
             
     if userType == 'student':
         # getting the user's first and last name(only students)
-        cur.execute("select first_name, last_name from students WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason (I think it's because it's a tuple?)
+        cur.execute("SELECT first_name, last_name FROM students WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason (I think it's because it's a tuple?)
         names=cur.fetchall()
         print(names)
     
