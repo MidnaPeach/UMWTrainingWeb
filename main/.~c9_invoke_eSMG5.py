@@ -1232,7 +1232,7 @@ def adminTrainingProgramsPage():
     return render_template('Theme/aTrainingPrograms.html', user = verifiedUser, userType = userType, Name = names, results = rows, trainingProgramInfoRows=trainingProgramInfoRows)
 #end admin Training Program page--------------------------------------------------
 
-@app.route('/add_students_from_file', methods=['POST'])
+@app.route('/add_users_from_file', methods=['POST']
 def add_students_from_file():
     pass
 
@@ -1241,7 +1241,7 @@ def add_single_student():
     
     pass
 
-def add_student(first_name, last_name, sport, year, email, one_rep_max, cur = None, db = None):
+def add_student(ufirst_name, last_name, sport, year, email, one_rep_max, cur = None, db = None):
     
     if cur == None or db == None:
         db = connectToDB()

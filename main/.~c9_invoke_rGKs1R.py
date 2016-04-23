@@ -1241,7 +1241,7 @@ def add_single_student():
     
     pass
 
-def add_student(first_name, last_name, sport, year, email, one_rep_max, cur = None, db = None):
+def add_student(ufirst_name, last_name, sport, year, email, one_rep_max, cur = None, db = None):
     
     if cur == None or db == None:
         db = connectToDB()
@@ -1286,7 +1286,7 @@ def adminAddUserPage():
     thisType = [x for item in thisType for x in repeat(item, cur.rowcount)]
     types = types + thisType
     #print(rows)
-    #print(types)
+    thisType = ['Student']
     #print("rowcount= ",cur.rowcount)
     
     query = "SELECT user_name, first_name, last_name, email FROM students"

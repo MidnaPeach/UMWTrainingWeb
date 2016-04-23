@@ -1241,8 +1241,8 @@ def add_single_student():
     
     pass
 
-def add_student(first_name, last_name, sport, year, email, one_rep_max, cur = None, db = None):
-    
+def add_student(ufirst_name, last_name, sport, year, email, one_rep_max, cur = None, db = None):
+    if cur 
     if cur == None or db == None:
         db = connectToDB()
         cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)

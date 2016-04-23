@@ -1,47 +1,55 @@
+{% include "topBar.html" %} {% block siteTitle %}
+<title> UMW Training - Add User </title> {% endblock %}
 
-{% include "topBar.html" %}
-    {% block siteTitle %} <title> UMW Training - Add User </title> {% endblock %}
-          
-   
-      <!-- this line is magical -->
-      {% include "adminSideMenu.html" -%}
-     
-     
-      
-      <!-- **********************************************************************************************************************************************************
+
+<!-- this line is magical -->
+{% include "adminSideMenu.html" -%}
+
+
+
+<!-- **********************************************************************************************************************************************************
       MAIN CONTENT
       *********************************************************************************************************************************************************** -->
-      <!--main content start-->
-      <section id="main-content">
-          <section class="wrapper site-min-height">
-          	<h3><i class="fa fa-angle-right"></i> Add User </h3>
-          	<div class="row mt">
-          		<div class="col-lg-12">
-          		<center>
-          		    <!-- this is div for the browse and submit for file button -->
-          		    <div class="addUserByFile" >
-          		        <p style="text-align:left;">Add users by file upload: </p> 
-          		            <form method="post" action="/aAddUser" enctype=multipart/form-data>
-              		            <!-- this is the browse button -->
-              		            <input type="file" value="Browse" name="browse_file" style=float:left>
-          		                <!-- this is the submit button -->
-          		                <input type="submit" value="Submit File" name="submit_file" style=float:left>
-          		            </form>
-          		        <p><br></p>
-          		    </div>
-          		    <!--<a href="/aAddUser">
-          		        <input type="submit" value="Add User"><br><br>
-          		    </a>-->
-          		    
-          		    <!--<input type="submit" value="Edit" name="Submit1">-->
-          		    <table style="color:white; background-color: #5496cf;">
+<!--main content start-->
+<section id="main-content">
+    <section class="wrapper site-min-height">
+
+        <div class="row mt">
+            <div class="col-lg-12 text-center">
+                <hr/>
+                <h3>Current Users</h3>
+                <hr/>
+                <center>
+                    <table style="color:white; background-color: #5496cf;">
                         <tr>
-                            <td style="padding-top: 10px; padding-left: 10px; padding-right: 10px; border: 1px solid #4684db;"><center></center></td>
-                            <td style="padding-top: 10px; padding-left: 10px; padding-right: 10px; border: 1px solid #4684db;"><center><p style="width: 100px padding:7px">Username</p></center></td>
-                            <td style="padding-top: 10px; padding-left: 10px; padding-right: 10px; border: 1px solid #4684db; width: 100px"><center><p style="width: 100px padding:7px">User Type</p></center></td>
-                            <td style="padding-top: 10px; padding-left: 10px; padding-right: 10px; border: 1px solid #4684db;"><center><p style="width: 100px padding:7px">First Name</p></center></td>
-                            <td style="padding-top: 10px; padding-left: 10px; padding-right: 10px; border: 1px solid #4684db;"><center><p style="width: 100px padding:7px">Last Name</p></center></td>
-                            <td style="padding-top: 10px; padding-left: 10px; padding-right: 10px; border: 1px solid #4684db;"><center><p style="width: 100px padding:7px">E-mail</p></center></td>
+                            <td style="padding-top: 10px; padding-left: 10px; padding-right: 10px; border: 1px solid #4684db;">
+                                <center></center>
+                            </td>
+                            <td style="padding-top: 10px; padding-left: 10px; padding-right: 10px; border: 1px solid #4684db;">
+                                <center>
+                                    <p style="width: 100px padding:7px">Username</p>
+                                </center>
+                            </td>
+                            <td style="padding-top: 10px; padding-left: 10px; padding-right: 10px; border: 1px solid #4684db; width: 100px">
+                                <center>
+                                    <p style="width: 100px padding:7px">User Type</p>
+                                </center>
+                            </td>
+                            <td style="padding-top: 10px; padding-left: 10px; padding-right: 10px; border: 1px solid #4684db;">
+                                <center>
+                                    <p style="width: 100px padding:7px">First Name</p>
+                                </center>
+                            </td>
+                            <td style="padding-top: 10px; padding-left: 10px; padding-right: 10px; border: 1px solid #4684db;">
+                                <center>
+                                    <p style="width: 100px padding:7px">Last Name</p>
+                                </center>
+                            </td>
+                            <td style="padding-top: 10px; padding-left: 10px; padding-right: 10px; border: 1px solid #4684db;">
+                                <center>
+                                    <p style="width: 100px padding:7px">E-mail</p>
+                                </center>
+                            </td>
                         </tr>
                         {% for result in results %}
                         <tr>
@@ -50,37 +58,38 @@
                                     <table>
                                         <tr>
                                             <td>
-                                                <form method="post", action="/aAddUser">
+                                                <form method="post" , action="/aAddUser">
                                                     <input style="margin-right: 3px; margin-left: 3px; margin-top: 5px; margin-bottom: -12px;" type="submit" value="Edit" name="action">
                                                     <input class="astext" type="hidden" value="{{result[0]}}" name="user">
                                                 </form>
                                             </td>
                                             <td>
-                                                <form method="post", action="/aAddUser">
+                                                <form method="post" , action="/aAddUser">
                                                     <input style="margin-right: 3px; margin-top: 5px; margin-bottom: -12px;" onclick="confirmDelete()" type="submit" value="Delete" name="action">
                                                     <input class="confirm" type="hidden" value="" name="confirmD">
                                                     <input type="hidden" value="{{result[0]}}" name="user">
-                                                    
+
                                                     <script>
-                                                    function confirmDelete() {
-                                                        var x;
-                                                        if (confirm("Are you sure you want to delete?") == true) {
-                                                            x = "Delete";
-                                                        } else {
+                                                        function confirmDelete() {
+                                                            var x;
+                                                            if (confirm("Are you sure you want to delete?") == true) {
+                                                                x = "Delete";
+                                                            }
+                                                            else {
                                                                 x = "NoDelete";
+                                                            }
+
+                                                            var elements = document.getElementsByClassName("confirm");
+                                                            for (var i = 0; i < elements.length; i++) {
+                                                                elements[i].value = x;
+                                                            }
                                                         }
-                                                        
-                                                        var elements = document.getElementsByClassName("confirm");
-                                                        for(var i=0; i<elements.length; i++) {
-                                                            elements[i].value = x;
-                                                        }
-                                                    }
                                                     </script>
-                                                    
+
                                                 </form>
                                             </td>
                                             <td>
-                                                <form method="post", action="/aAddUser">
+                                                <form method="post" , action="/aAddUser">
                                                     <input style="margin-right: 3px; margin-top: 5px; margin-bottom: -12px;" type="submit" value="View" name="action">
                                                     <input class="astext" type="hidden" value="{{result[0]}}" name="user">
                                                 </form>
@@ -89,13 +98,13 @@
                                     </table>
                                 </center>
                             </td>
-                            
+
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
                                 <center style=" padding-left: 10px; padding-right: 10px;">{{result[0]}}</center>
                             </td>
-                            
+
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                
+
                                 <center style=" padding-left: 10px; padding-right: 10px;">{{types[results.index(result)]}}</center>
                             </td>
                             <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
@@ -108,105 +117,224 @@
                                 <center style=" padding-left: 10px; padding-right: 10px;">{{result[3]}}</center>
                             </td>
                         </tr>
-                        
+
                         {% endfor %}
                     </table>
-                    <br><br>
-          		</center>
-          		
-          		<form method = "post", action="/aAddUser">
-          		<center>
-          		    
-          		    <table style="color:white; background-color: #5496cf; border: 1px solid lightgrey;">
-                        <tr>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Muscle Group&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Description&nbsp;&nbsp;</center></td>
-                            <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;"><center>&nbsp;&nbsp;Youtube Embed Link&nbsp;&nbsp;</center></td>
-                        </tr>
-                        <tr>
-                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <input type="text" name="ename" style="margin-left: 10px; margin-right: 10px;" maxlength="20">
-                            </td>
-                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <center>
-                                <select name="emusclegroup" value="Muscle Groups">
-                                    <option value="Chest">Chest</option>
-                                    <option value="Arms">Arms</option>
-                                    <option value="Legs">Legs</option>
-                                    <option value="Back">Back</option>
-                                    <option value="Shoulders">Shoulders</option>
-                                    <option value="Neck">Neck</option>
-                                    <option value="Abs">Abs</option>
-                                    <option value="Upper Body">Upper Body</option>
-                                    <option value="Lower Body">Lower Body</option>
-                                </select>
-                                </center>
-                            </td>
-                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <textarea rows="4" cols="30" name="edesc" style="margin-left: 10px; margin-right: 10px;"></textarea>
-                            </td>
-                            <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
-                                <input type="text" name="eyoutube" style="margin-left: 10px; margin-right: 10px;">
-                            </td>
-                        </tr>
-                    </table>
                     <br>
+                    <br>
+                </center>
+
+                
+                    <hr/>
+                    <h3>Add Users By File</h3>
+                    <hr/>
+                    <div class="addUserByFile">
+                        <!--<p style="text-align:left;">Add users by file upload: </p>-->
+                        <form method="post" action="/aAddUser" enctype=multipart/form-data class="text-center">
+                            <!-- this is the browse button -->
+                            <center>
+                                <input id="browsFile" type="file" value="Browse" name="browse_file" accept=".CSV" />
+                            </center>
+                            <!-- , application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel -->
+
+                            <!-- this is the submit button -->
+                            <br/>
+                            <input id="submitFile" type="submit" value="Submit File" name="submit_file" disabled=true />
+
+                            <script>
+                                document.getElementById("browsFile").onchange = function() {
+                                    var x;
+                                    if (document.getElementById("browsFile").files.length == 0) {
+                                        console.log("no files selected");
+                                    }
+                                    else {
+                                        document.getElementById("submitFile").disabled = false;
+                                    }
+                                }
+                            </script>
+                        </form>
+                    </div>
+
+                
+
+
+                <hr/>
+                <h3>Add Single User</h3>
+                <hr/>
+                <form method="post" , action="/add_single_student">
+                    <center>
+                        <table style="color:white; background-color: #5496cf; border: 1px solid lightgrey;">
+                            <tr>
+                                <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;First Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center>
+                                </td>
+                                <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>&nbsp;&nbsp;Last Name&nbsp;&nbsp;</center>
+                                </td>
+                                <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>&nbsp;&nbsp;Username&nbsp;&nbsp;</center>
+                                </td>
+                                <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>&nbsp;&nbsp;Email&nbsp;&nbsp;</center>
+                                </td>
+                                <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>&nbsp;&nbsp;Sport&nbsp;&nbsp;</center>
+                                </td>
+                                 <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>&nbsp;&nbsp;Year&nbsp;&nbsp;</center>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="width:70%;color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <input type="text" name="first_name" style="margin-left: 10px; margin-right: 10px;" maxlength="20">
+                                </td>
+                                <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>
+                                      <input type"text" name="last_name" style="margin-left: 10px; margin-right: 10px;" maxlength="20">
+                                    </center>
+                                </td>
+                                <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <input tpe="text" name="username" style="margin-left: 10px; margin-right: 10px;" maxlength="20">
+                                </td>
+                                <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <input type="text" name="email" style="margin-left: 10px; margin-right: 10px;">
+                                </td>
+                                  <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <input type="text" name="sport" style="margin-left: 10px; margin-right: 10px;">
+                                </td>
+                                  <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <input type="text" name="year" style="margin-left: 10px; margin-right: 10px;">
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
+
+                        <form action="/add_student">
+
+                        </form>
                         <a href="/aAddUser">
-          		            <input type="submit" value="Submit"><br><br>
-          		        </a>
-          		    </br>
-          		    {% if badName %}
-          		        <p style="color:red">Error: Exercise name cannot be blank or match the name of an already existing exercise.</p>
-          		    {% endif %}
-          		    {% if exerciseCreated %}
-          		        <p style="color:black">Exercise Created!</p>
-          		    {% endif %}
-          		</center>
-          		</form> 
-          		
-          		</div>
-          	</div>
-			
-		</section><! --/wrapper -->
-      </section><!-- /MAIN CONTENT -->
+                            <input type="submit" value="Submit">
+                            <br>
+                            <br>
+                        </a>
+                        </br>
+                        {% if badName %}
+                        <p style="color:red">Error: Exercise name cannot be blank or match the name of an already existing exercise.</p>
+                        {% endif %} {% if exerciseCreated %}
+                        <p style="color:black">Exercise Created!</p>
+                        {% endif %}
+                    </center>
+                </form>
 
-      <!--main content end-->
-      <!--footer start-->
-      <footer class="site-footer">
-          <div class="text-center">
-              2016 - UMW Training Program
-              <a href="aAddUser" class="go-top">
-                  <i class="fa fa-angle-up"></i>
-              </a>
-          </div>
-      </footer>
-      <!--footer end-->
-  </section>
+                <hr/>
+                <h3>Add Single Admin</h3>
+                <hr/>
 
-    <!-- js placed at the end of the document so the pages load faster -->
-    <script src="assets/js/jquery.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/jquery-ui-1.9.2.custom.min.js"></script>
-    <script src="assets/js/jquery.ui.touch-punch.min.js"></script>
-    <script class="include" type="text/javascript" src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
-    <script src="assets/js/jquery.scrollTo.min.js"></script>
-    <script src="assets/js/jquery.nicescroll.js" type="text/javascript"></script>
+                <form method="post" , action="/add_single_admin">
+                    <center>
+                        <table style="color:white; background-color: #5496cf; border: 1px solid lightgrey;">
+                            <tr>
+                                <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;First Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</center>
+                                </td>
+                                <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>&nbsp;&nbsp;Last Name&nbsp;&nbsp;</center>
+                                </td>
+                                <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>&nbsp;&nbsp;Username&nbsp;&nbsp;</center>
+                                </td>
+                                <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>&nbsp;&nbsp;Email&nbsp;&nbsp;</center>
+                                </td>
+                                <td style="padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>&nbsp;&nbsp;User Type&nbsp;&nbsp;</center>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <input type="text" name="ename" style="margin-left: 10px; margin-right: 10px;" maxlength="20">
+                                </td>
+                                <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <center>
+                                        <select name="emusclegroup" value="Muscle Groups">
+                                            <option value="Chest">Chest</option>
+                                            <option value="Arms">Arms</option>
+                                            <option value="Legs">Legs</option>
+                                            <option value="Back">Back</option>
+                                            <option value="Shoulders">Shoulders</option>
+                                            <option value="Neck">Neck</option>
+                                            <option value="Abs">Abs</option>
+                                            <option value="Upper Body">Upper Body</option>
+                                            <option value="Lower Body">Lower Body</option>
+                                        </select>
+                                    </center>
+                                </td>
+                                <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <textarea rows="4" cols="30" name="edesc" style="margin-left: 10px; margin-right: 10px;"></textarea>
+                                </td>
+                                <td style="color:black; background-color: white; padding-top: 10px; padding-bottom: 10px; border: 1px solid lightgrey;">
+                                    <input type="text" name="eyoutube" style="margin-left: 10px; margin-right: 10px;">
+                                </td>
+                            </tr>
+                        </table>
+                        <br>
+
+                        <form action="/add_student">
+
+                        </form>
+
+                        </br>
+                        {% if badName %}
+                        <p style="color:red">Error: Exercise name cannot be blank or match the name of an already existing exercise.</p>
+                        {% endif %} {% if exerciseCreated %}
+                        <p style="color:black">Exercise Created!</p>
+                        {% endif %}
+                    </center>
+                </form>
+            </div>
+        </div>
+
+    </section>
+    <! --/wrapper -->
+</section>
+<!-- /MAIN CONTENT -->
+
+<!--main content end-->
+<!--footer start-->
+<footer class="site-footer">
+    <div class="text-center">
+        2016 - UMW Training Program
+        <a href="aAddUser" class="go-top">
+            <i class="fa fa-angle-up"></i>
+        </a>
+    </div>
+</footer>
+<!--footer end-->
+</section>
+
+<!-- js placed at the end of the document so the pages load faster -->
+<script src="assets/js/jquery.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="assets/js/jquery.ui.touch-punch.min.js"></script>
+<script class="include" type="text/javascript" src="assets/js/jquery.dcjqaccordion.2.7.js"></script>
+<script src="assets/js/jquery.scrollTo.min.js"></script>
+<script src="assets/js/jquery.nicescroll.js" type="text/javascript"></script>
 
 
-    <!--common script for all pages-->
-    <script src="assets/js/common-scripts.js"></script>
+<!--common script for all pages-->
+<script src="assets/js/common-scripts.js"></script>
 
-    <!--script for this page-->
-    
-  <script>
-      //custom select box
+<!--script for this page-->
 
-      $(function(){
-          $('select.styled').customSelect();
-      });
+<script>
+    //custom select box
 
-  </script>
+    $(function() {
+        $('select.styled').customSelect();
+    });
+</script>
 
-  </body>
+</body>
+
 </html>
