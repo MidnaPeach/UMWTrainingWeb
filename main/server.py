@@ -256,6 +256,16 @@ def adminExercisesPage():
             confirm = request.form['confirmD']
             print(confirm)
             if confirm == 'Delete':
+                cur.execute("SELECT exercise_id from exercises WHERE exercise_name = %s", (exercise,))
+                ID = cur.fetchall()
+                ID = ID[0][0]
+                print ID
+                try:
+                    cur.execute("DELETE FROM workout_exercises WHERE exercise_id = %s", (ID,))
+                except:
+                    print("Problem deleting from workout_exercises")
+                    db.rollback()
+                db.commit()
                 query = "DELETE FROM exercises WHERE exercise_name = '%s'" % (exercise,)
                 print(query)
                 try:
@@ -1306,6 +1316,7 @@ def adminAddUserPage():
     # if user typed in a post ...
     if request.method == 'POST':
         
+        #csv stuff starts here---------------------------------------
         if 'browse_file' in request.files:
             print('in browse')
             if request.files['browse_file']:
