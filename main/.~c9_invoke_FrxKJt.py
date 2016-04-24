@@ -5,7 +5,7 @@ import psycopg2
 import psycopg2.extras
 import os
 import csv
-from flask import Flask, session, render_template, request, redirect, url_for, flash
+from flask import Flask, session, render_template, request, redirect, url_for
 from werkzeug import secure_filename
 from itertools import repeat
 import cgi, cgitb
@@ -1242,9 +1242,70 @@ def adminTrainingProgramsPage():
     return render_template('Theme/aTrainingPrograms.html', user = verifiedUser, userType = userType, Name = names, results = rows, trainingProgramInfoRows=trainingProgramInfoRows)
 #end admin Training Program page--------------------------------------------------
 
+#admin view Training Program page------------------------------------------------------    
+@app.route('/aViewTrainingProgram', methods=['GET', 'POST'])
+def adminViewTrainingProgramPage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    username = re
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'workout' in session:
+        workout = session['workout']
+    else:
+        return redirect(url_for('adminTrainingProgramsPage'))
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    # get all data for the exercise ...
+    workoutsTable = []
+    exercises = []
+    rows = []
+    query = "SELECT workout_name, workout_id FROM workouts WHERE workout_name = '%s'" % (workout,)
+    print query
+    cur.execute("SELECT workout_name, workout_id FROM workouts WHERE workout_name = %s",(workout,))
+    workoutsTable = cur.fetchall()
+    print(workoutsTable)
+
+    query = "SELECT exercise_id, row_1, row_2, row_3, row_4, row_5, comments FROM workout_exercises WHERE workout_id = '%s'" % (workoutsTable[0][1],)
+    print query
+    cur.execute("SELECT exercise_id, row_1, row_2, row_3, row_4, row_5, comments FROM workout_exercises WHERE workout_id = %s",(workoutsTable[0][1],))
+    rows = cur.fetchall()
+    print(rows)
+    
+    for row in rows:
+        query = "SELECT exercise_name FROM exercises WHERE exercise_id = '%s'" % (row[0],)
+        print query
+        cur.execute("SELECT exercise_name FROM exercises WHERE exercise_id = %s",(row[0],))
+        exercises.append(cur.fetchall())
+        print(exercises)
+    
+    
+    ## For dubugging ##
+    #print(rows[0][0])
+    names = None
+    if userType == 'admin':
+        # getting the user's first and last name(only admins)
+        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        names=cur.fetchall()
+        print(names)
+    
+    #user, userType, names, and all data for the exercise are being passed to the website here. 
+    return render_template('Theme/aViewTrainingProgram.html', user = verifiedUser, userType = userType, Name = names, results = rows, workout = workout, workoutsTable = workoutsTable, exercises = exercises)
+#end admin view workouts page--------------------------------------------------
 
 
-#Chris wrote these.-----------------------------------------
 @app.route('/add_students_from_file', methods=['POST'])
 def add_students_from_file():
     pass
@@ -1252,26 +1313,101 @@ def add_students_from_file():
 @app.route("/add_single_student", methods=["POST"])
 def add_single_student():
     
-    pass
+    username = request.form['student_username']
+    first_name = request.form['student_first_name']
+    last_name = request.form['student_last_name']
+    email = request.form['student_email']
+    sport = request.form['student_sport']
+    year = request.form['student_year']
+    one_rep_max = 0 # add this to the form later
+    
+    add_student(username, first_name, last_name, sport, year, email, one_rep_max)
+    
+    return redirect(url_for('adminAddUserPage'))
 
-def add_student(user_name, first_name, last_name, sport, year, email, one_rep_max, cur = None, db = None):
+@app.route("/add_single_admin", methods=["POST"])
+def add_single_admin():
+    
+    username = request.form['admin_username']
+    first_name = request.form['admin_first_name']
+    last_name = request.form['admin_last_name']
+    email = request.form['admin_email']
+    
+    add_admin(username, first_name, last_name, email)
+    
+    return redirect(url_for('adminAddUserPage'))
+
+def add_student(username, first_name, last_name, sport, year, email, one_rep_max, cur = None, db = None):
+    
+    if cur == None or db == None: # load the database only when it has not been provided by the caller / prevents loading & closing the database multiple times when adding users from a CSV
+        db = connectToDB()
+        cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    user_added = add_user(username) # using default password of 'password'
+    
+    if not user_added:
+        return False
+        
+    query = "INSERT INTO students (user_name, first_name, last_name, sport, year, email, one_rep_max) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    values = (username, first_name, last_name, sport, year, email, one_rep_max)
+    
+    try:
+        cur.execute(query, values)
+        db.commit()
+        d
+    except Exception as e:
+        print("Error: ")
+        print(e)
+        print("Problem inserting into students")
+        db.rollback()
+    
+    return True
+
+def add_user(username, password='password', cur = None, db = None):
+    
+    if cur == None or db == None: # load the database only when it has not been provided by the caller / prevents loading & closing the database multiple times when adding users from a CSV
+        db = connectToDB()
+        cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    user_exists_query = "SELECT user_name FROM users WHERE user_name = %s"
+    cur.execute(user_exists_query, (username,))
+    user_exists = cur.fetchone()
+    if not user_exists:
+        return redirect(url_for('adminAddUserPage'))
+    
+    new_user_query = "INSERT INTO users VALUES (%s, crypt(%s, gen_salt('bf')))"
+    try:
+        cur.execute(new_user_query, (username, password))
+        db.commit()
+    except Exception as e: # catch the exception so we can show better error information to the console
+        print("Error: ")
+        print(e)
+        return False
+        db.rollback()
+        
+    
+        
+    return True
+    
+    
+def add_admin(username, first_name, last_name, email, cur = None, db = None):
     
     if cur == None or db == None:
         db = connectToDB()
         cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
-    query = "INSERT INTO students (user_name, last_name, first_name, sport, year, email,         one_rep_max) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-    values = (user_name, last_name, first_name, sport, year, email, one_rep_max)
+    query = "INSERT INTO admin (user_name, first_name, last_name, email) VALUES (%s, %s, %s, %s)"
+    values = (username, first_name, last_name, email)
     
     try:
         cur.execute(query, values)
     except:
-        print("Problem inserting into students")
+        print("Problem inserting into admin")
         db.rollback()
         
     db.commit()
-#end functions Chris wrote----------------------------------
-    
+
+
 #admin add user page------------------------------------------------------    
 @app.route('/aAddUser', methods=['GET', 'POST'])
 def adminAddUserPage():
@@ -1321,64 +1457,60 @@ def adminAddUserPage():
     if request.method == 'POST':
         
         #csv stuff starts here---------------------------------------
-        #written by Michelle and Michael
         if 'browse_file' in request.files:
             print('in browse')
             if request.files['browse_file']:
                 file = request.files['browse_file']
                 filename = secure_filename(str(file.filename))
                 fileContents = str(file.stream.read()) 
+                #trying to get it to load the data into a python dictionary
                 if os.path.isfile(filename):
-                    if filename.lower().endswith('.csv'): # you can add more by putting them in a tuple  - see http://stackoverflow.com/questions/5899497/checking-file-extension
-                        reader = csv.DictReader(open(filename, 'rU'), dialect=csv.excel_tab)
+                    reader = csv.DictReader(open(filename, 'rU'), dialect=csv.excel_tab)
 
-                        result = {}
-                        for row in reader:
-                            for column, value in row.iteritems():
-                                result.setdefault(column, []).append(value)
-                        print("HEYYYYYYY____________", result)
-                        #we need to put it into the database here once the results are checked for errors
-                        user_name = ""
-                        last_name = ""
-                        first_name = ""
-                        sport = ""
-                        year = ""
-                        email = ""
-                        one_rep_max = ""
-                        
-                        query = "INSERT INTO students (user_name, last_name, first_name, sport, year, email, one_rep_max) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                        values = (user_name, last_name, first_name, sport, year, email, one_rep_max)
-                        #print query
-                        try:
-                            cur.execute(query, values)
-                        except:
-                            print("Problem inserting into students")
-                            flash('There was a problem adding students from the file. Please try again.')
-                            #session.pop('_flashes', None)
-                            db.rollback()
-                        db.commit()
-                        
-                        #print("This is what is read from the file: ", fileContents)
-                    else:
-                        print("This file type is not allowed. Please try another file with a .csv extension.")
+                    result = {}
+                    for row in reader:
+                        for column, value in row.iteritems():
+                            result.setdefault(column, []).append(value)
+                    print("HEYYYYYYY____________", result)
+                    #we need to put it into the database here once the results are checked for errors
+                    user_name = ""
+                    last_name = ""
+                    first_name = ""
+                    sport = ""
+                    year = ""
+                    email = ""
+                    one_rep_max = ""
+                    
+                    query = "INSERT INTO students (user_name, first_name, last_name, sport, year, email, one_rep_max) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                    values = (user_name, first_name, last_name, sport, year, email, one_rep_max)
+                    print query
+                    try:
+                        cur.execute(query, values)
+                    except:
+                        print("Problem inserting into students")
+                        db.rollback()
+                    db.commit()
+                    
+                    # We may just want to go with strictly '.csv' files. The below prints crazyness when csvTest.xlsx is uploaded, but it handles '.csv' files nicely -michael
+                    print ("This is what is read from the file: ", fileContents)
                 else:
-                    print("This file could not be parsed. Please try another file with the correct format.")
+                    print("This file could not be parsed. Please try another file or a differnt format.")
             else:
                 #print out to user there was an error
-                print("This file could not be parsed. Please try another file or a different format.")
+                print("This file could not be parsed. Please try another file or a differnt format.")
         else:
-            print('browse_file wasn''t in request.files')
+            print('browse_file wasnt in request.files')
         
         #when user hits submit button
         if 'submit_file' in request.form: 
             print("You hit the file submit button!")
         else:
             print('something else happened')
-    #end csv part----------------------------------------------        
             
     ####################################################################################
     ##This (below) can also be turned into a function. I think it's on like every page. 
     ####################################################################################
+    names = None
     if userType == 'admin':
         # getting the user's first and last name(only admins)
         cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
@@ -1443,6 +1575,7 @@ def studentHome():
             verifiedUser = ''
             session['username'] = ''
             
+    names = None
     if userType == 'student':
         # getting the user's first and last name(only students)
         cur.execute("SELECT first_name, last_name FROM students WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
@@ -1491,6 +1624,7 @@ def studentCalendarPage():
             verifiedUser = ''
             session['username'] = ''
             
+    names = None
     if userType == 'student':
         # getting the user's first and last name(only students)
         cur.execute("SELECT first_name, last_name FROM students WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason (I think it's because it's a tuple?)
