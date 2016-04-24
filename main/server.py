@@ -1321,54 +1321,59 @@ def adminAddUserPage():
     if request.method == 'POST':
         
         #csv stuff starts here---------------------------------------
-        #written by Michelle and Michael
+        #written by Michelle
         if 'browse_file' in request.files:
             print('in browse')
+            studentIds=1
             if request.files['browse_file']:
                 file = request.files['browse_file']
                 filename = secure_filename(str(file.filename))
                 fileContents = str(file.stream.read()) 
                 if os.path.isfile(filename):
                     if filename.lower().endswith('.csv'): # you can add more by putting them in a tuple  - see http://stackoverflow.com/questions/5899497/checking-file-extension
-                        reader = csv.DictReader(open(filename, 'rU'), dialect=csv.excel_tab)
-
-                        result = {}
-                        for row in reader:
-                            for column, value in row.iteritems():
-                                result.setdefault(column, []).append(value)
-                        print("HEYYYYYYY____________", result)
-                        #we need to put it into the database here once the results are checked for errors
-                        user_name = ""
-                        last_name = ""
-                        first_name = ""
-                        sport = ""
-                        year = ""
-                        email = ""
-                        one_rep_max = ""
+                        with open(filename, 'r') as filename:
+                            reader = csv.reader(filename, delimiter=',')
                         
-                        query = "INSERT INTO students (user_name, last_name, first_name, sport, year, email, one_rep_max) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                        values = (user_name, last_name, first_name, sport, year, email, one_rep_max)
-                        #print query
-                        try:
-                            cur.execute(query, values)
-                        except:
-                            print("Problem inserting into students")
-                            flash('There was a problem adding students from the file. Please try again.')
-                            #session.pop('_flashes', None)
-                            db.rollback()
-                        db.commit()
-                        
-                        #print("This is what is read from the file: ", fileContents)
+                            results = []
+                            for row in reader:
+                                if len(row) == 7:
+                                    print(row)
+                                    print("username=", row[0], "lname=", row[1],"fname=", row[2])
+                                    print("sport=", row[3], "yr=", row[4], "email=", row[5], "oneRepMax=", row[6])
+                                    user_name = row[0]
+                                    last_name = row[1]
+                                    first_name =row[2]
+                                    sport = row[3]
+                                    year = int(row[4])
+                                    email = row[5]
+                                    one_rep_max = int(row[6])
+                                    if ((type(user_name)==str) & (type(last_name)==str) & (type(first_name)==str) & 
+                                        (type(sport)==str) & (type(year)==int) & (type(email)==str) &
+                                        (type(one_rep_max)==int)):
+                                        query = "INSERT INTO students (student_id, user_name, last_name, first_name, sport, year, email, one_rep_max) VALUES (%s, %s, %s, %s, %d, %s, %d)"
+                                        values = (studentIds+1, user_name, last_name, first_name, sport, year, email, one_rep_max)
+                                        try:
+                                            print("asking for:", query, "with the values:", values)
+                                            cur.execute(query, values)
+                                        except:
+                                            #http://flask.pocoo.org/docs/0.10/patterns/flashing/
+                                            #flash('There was a problem with the file. Adding was aborted. \n Double-check the format of the file, and that each entry follows the following format. \n "ExampleUsername, LastName, FirstName, Sport, Year, Email, One Rep Max."')
+                                            #session.pop('_flashes', None)
+                                            db.rollback()
+                                        db.commit()
+                                    else:
+                                        flash('There was an error in one of the fields.')
+                                else:
+                                    flash("This file could not be parsed. Please try another file with the correct format.")
                     else:
                         print("This file type is not allowed. Please try another file with a .csv extension.")
                 else:
                     print("This file could not be parsed. Please try another file with the correct format.")
             else:
-                #print out to user there was an error
                 print("This file could not be parsed. Please try another file or a different format.")
         else:
             print('browse_file wasn''t in request.files')
-        
+            
         #when user hits submit button
         if 'submit_file' in request.form: 
             print("You hit the file submit button!")
