@@ -28,15 +28,9 @@
             <h4 style="color:black">Name: </h4>
             <input type="text" name="ename" maxlength="20" value="{{results[0][0]}}">
             <br>
+            <!--Brittany Raze changed the muscle group options-->
             <h4 style="color:black">Muscle Group: </h4>
             <select name="emusclegroup" selected="{{results[0][1]}}">
-              <!--<option value="Chest" {% if results[0][1] == 'Chest' %}selected{% endif %}>Chest</option>
-                      <option value="Arms" {% if results[0][1] == 'Arms' %}selected{% endif %}>Arms</option>
-                      <option value="Legs" {% if results[0][1] == 'Legs' %}selected{% endif %}>Legs</option>
-                      <option value="Back" {% if results[0][1] == 'Back' %}selected{% endif %}>Back</option>
-                      <option value="Shoulders" {% if results[0][1] == 'Shoulders' %}selected{% endif %}>Shoulders</option>
-                      <option value="Neck" {% if results[0][1] == 'Neck' %}selected{% endif %}>Neck</option>
-                      <option value="Abs" {% if results[0][1] == 'Abs' %}selected{% endif %}>Abs</option>-->
               <option value="Upper Body" {% if results[0][1]=='Upper Body' %}selected{% endif %}>Upper Body</option>
               <option value="Lower Body" {% if results[0][1]=='Lower Body' %}selected{% endif %}>Lower Body</option>
               <option value="Core" {% if results[0][1]=='Core' %}selected{% endif %}>Core</option>

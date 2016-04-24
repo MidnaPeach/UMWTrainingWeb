@@ -151,9 +151,10 @@ def adminHome():
         
     #user and userType are being passed to the website here
     return render_template('Theme/aHome.html', user = verifiedUser, userType = userType, Name = names)
-#end adminHome------------------------------------------------------------------------------------------------------------------------ 
+#end adminHome-----------------------------------------------------------------------------------------------------
 
-#admin calendar page------------------------------------------------------    
+#admin calendar page---------------------------------------------------------------------
+#Brittany Raze wrote this----------------------------------------------------------------
 @app.route('/aCalendar', methods=['GET', 'POST'])
 def adminCalendarPage():
     if 'username' in session:
@@ -1110,6 +1111,8 @@ def adminViewWorkoutsPage():
     #user, userType, names, and all data for the exercise are being passed to the website here. 
     return render_template('Theme/aViewWorkouts.html', user = verifiedUser, userType = userType, Name = names, results = rows, workout = workout, workoutsTable = workoutsTable, exercises = exercises)
 #end admin view workouts page--------------------------------------------------
+
+#admin edit workouts page------------------------------------------------------  
 @app.route('/aEditWorkouts', methods = ['GET', 'POST'])
 def adminEditWorkoutsPage():
     if 'username' in session:
@@ -1130,8 +1133,10 @@ def adminEditWorkoutsPage():
         verifiedUser = ''
     db = connectToDB()
     cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+#end admin edit workouts page------------------------------------------------------
 
-#admin training programs page------------------------------------------------------    
+#admin training programs page------------------------------------------------------------   
+#Brittany Raze wrote this----------------------------------------------------------------
 @app.route('/aTrainingPrograms', methods=['GET', 'POST'])
 def adminTrainingProgramsPage():
     if 'username' in session:
@@ -1240,9 +1245,557 @@ def adminTrainingProgramsPage():
         
     #user and userType are being passed to the website here along with the workout data as "results".
     return render_template('Theme/aTrainingPrograms.html', user = verifiedUser, userType = userType, Name = names, results = rows, trainingProgramInfoRows=trainingProgramInfoRows)
-#end admin Training Program page--------------------------------------------------
+#Brittany Raze wrote this----------------------------------------------------------------
+#end admin Training Program page---------------------------------------------------------
 
+#admin view training program page------------------------------------------------------    
+@app.route('/aViewTrainingProgram', methods=['GET', 'POST'])
+def adminViewTrainingProgramPage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    if verifiedUser == '':
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'trainingProgram' in session:
+        trainingProgram = session['trainingProgram']
+    else:
+        return redirect(url_for('adminTrainingProgramsPage'))
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    
+    # get all data for the training program...
+    programTable  = []
+    workoutsTable = []
+    workoutIDs = []
+    workouts = []
+    exercises = []
+    rows = []
+    query = "SELECT training_program_id FROM training_programs WHERE training_program_name = '%s'" % (trainingProgram,)
+    print query
+    cur.execute("SELECT training_program_id FROM training_programs WHERE training_program_name = %s",(trainingProgram,))
+    programID = cur.fetchall()[0][0]
+    print"programID= ", programID
+   
+    query = "SELECT workout_id, day_number, week_number, day_type, workout_order FROM training_program_workouts WHERE training_program_id = '%s'" % (programID,)
+    print query
+    cur.execute("SELECT workout_id, day_number, week_number, day_type, workout_order FROM training_program_workouts WHERE training_program_id = %s",(programID,))
+    programTable = cur.fetchall()
+    print"programTable= ", programTable
+   
+    query = "SELECT workout_id FROM training_program_workouts WHERE training_program_id = '%s'" % (programID,)
+    print query
+    cur.execute("SELECT workout_id FROM training_program_workouts WHERE training_program_id = %s",(programID,))
+    workoutIDs = cur.fetchall()
+    print"workoutIDs= ", workoutIDs
+    
+    for ID in workoutIDs: 
+        query = "SELECT workout_name, workout_id FROM workouts WHERE workout_id = '%s'" % (ID[0],)
+        print query
+        cur.execute("SELECT workout_name, workout_id FROM workouts WHERE workout_id = %s",(ID[0],))
+        workoutsTable = workoutsTable + cur.fetchall()
+    print"workoutsTable= ",workoutsTable
+#
+    for ID in workoutIDs:
+        query = "SELECT workout_id, exercise_id, row_1, row_2, row_3, row_4, row_5, comments FROM workout_exercises WHERE workout_id = '%s'" % (ID[0],)
+        print query
+        cur.execute("SELECT workout_id, exercise_id, row_1, row_2, row_3, row_4, row_5, comments FROM workout_exercises WHERE workout_id = %s",(ID[0],))
+        rows = rows + cur.fetchall()
+    print"rows= ",rows
+    
+    for row in rows:
+        query = "SELECT exercise_name FROM exercises WHERE exercise_id = '%s'" % (row[1],)
+        print query
+        cur.execute("SELECT exercise_name FROM exercises WHERE exercise_id = %s",(row[1],))
+        exercises.append(cur.fetchall())
+        print"exercises= ",exercises
+    
+    
+    ## For dubugging ##
+    #print(rows[0][0])
+    
+    if userType == 'admin':
+        # getting the user's first and last name(only admins)
+        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        names=cur.fetchall()
+        print(names)
+    
+    #user, userType, names, and all data for the exercise are being passed to the website here. 
+    return render_template('Theme/aViewTrainingProgram.html', user = verifiedUser, userType = userType, Name = names, results = rows, program = trainingProgram, workoutsTable = workoutsTable, exercises = exercises)
+#end admin view training program page--------------------------------------------------
 
+#admin create training program page------------------------------------------------------  
+#Brittany Raze wrote this----------------------------------------------------------------
+@app.route('/aCreateTrainingProgram', methods=['GET', 'POST'])
+def adminCreateTrainingProgramPage():
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    if 'userType' in session:
+        userType = session['userType']
+    else:
+        userType = ''
+    if verifiedUser == '':
+        return redirect(url_for('login'))
+    if userType == '':
+        return redirect(url_for('login'))
+    if 'username' in session:
+        verifiedUser = session['username']
+    else:
+        verifiedUser = ''
+    db = connectToDB()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    badName = False
+    trainingProgramCreated = False
+    badInput = False
+    trainingProgramName = ''
+    
+    if 'workoutCount' not in session:
+        session['workoutCount'] = 2
+        print("workoutCount= ",session['workoutCount'])
+    
+    query = "SELECT workout_name FROM workouts"
+    print query
+    cur.execute("SELECT workout_name FROM workouts")
+    
+    workouts = cur.fetchall()
+    print("workoutCount= ",session['workoutCount'])
+
+    # if user typed in a post ...
+    if request.method == 'POST':
+        print "HI"
+        inc = request.form['inc']
+        if inc == 'add':
+            badName = False
+            trainingProgramName = request.form['name']
+            print("workoutCount#= ",session['workoutCount'])
+            for i in range(1,session['workoutCount']):
+                print(str(i))
+                trainingProgram = str(request.form['trainingProgram'+str(i)])
+                row1 = str(request.form['row1-'+str(i)])
+                print(row1)
+                row2 = str(request.form['row2-'+str(i)])
+                print(row2)
+                row3 = str(request.form['row3-'+str(i)])
+                print(row3)
+                row4 = str(request.form['row4-'+str(i)])
+                print(row4)
+                row5 = str(request.form['row5-'+str(i)])
+                print(row5)
+                comments = str(request.form['comments'+str(i)])
+                print(comments)
+                if i == 1:
+                    print("made it to if")
+                    session['previousInput'] = [[str(trainingProgram), str(row1), str(row2), str(row3), str(row4), str(row5), str(comments)]]
+                else:
+                    print("made it to else")
+                    session['previousInput'].append([str(trainingProgram), str(row1), str(row2), str(row3), str(row4), str(row5), str(comments)])
+            session['previousInput'].append(['', '', '', '', '', ''])
+            session['workoutCount'] = session['workoutCount']+1
+            print("previousInput= ",session['previousInput'])
+            print("workoutCount!= ",session['workoutCount'])
+        
+        elif inc == 'cancel':
+            badName = False
+            workoutName = request.form['name']
+            print("workoutCount#= ",session['workoutCount'])
+            for i in range(1,session['workoutCount']):
+                print(str(i))
+                workout = str(request.form['workout'+str(i)])
+                row1 = str(request.form['row1-'+str(i)])
+                print(row1)
+                row2 = str(request.form['row2-'+str(i)])
+                print(row2)
+                row3 = str(request.form['row3-'+str(i)])
+                print(row3)
+                row4 = str(request.form['row4-'+str(i)])
+                print(row4)
+                row5 = str(request.form['row5-'+str(i)])
+                print(row5)
+                comments = str(request.form['comments'+str(i)])
+                print(comments)
+                if i == 1:
+                    print("made it to if")
+                    session['previousInput'] = [[str(workout), str(row1), str(row2), str(row3), str(row4), str(row5), str(comments)]]
+                else:
+                    print("made it to else")
+                    session['previousInput'].append([str(workout),str(row1), str(row2), str(row3), str(row4), str(row5), str(comments)])
+            print("previousInput= ",session['previousInput'])
+            print("workoutCount!= ",session['workoutCount'])
+            
+        else:
+            trainingProgramName = request.form['name']
+            print(trainingProgramName)
+        
+            query = "SELECT training_program_name FROM training_programs WHERE training_program_name = '%s'" % (trainingProgramName,)
+            print query
+            cur.execute("SELECT training_program_name FROM training_programs WHERE training_program_name = %s", (trainingProgramName,))
+            if cur.fetchone():
+                badName = True
+                #workoutName = request.form['name']
+                print("workoutCount#= ",session['workoutCount'])
+                for i in range(1,session['workoutCount']):
+                    print(str(i))
+                    workout = str(request.form['workout'+str(i)])
+                    row1 = str(request.form['row1-'+str(i)])
+                    print(row1)
+                    row2 = str(request.form['row2-'+str(i)])
+                    print(row2)
+                    row3 = str(request.form['row3-'+str(i)])
+                    print(row3)
+                    row4 = str(request.form['row4-'+str(i)])
+                    print(row4)
+                    row5 = str(request.form['row5-'+str(i)])
+                    print(row5)
+                    comments = str(request.form['comments'+str(i)])
+                    print(comments)
+                    if i == 1:
+                        print("made it to if")
+                        session['previousInput'] = [[str(workout), str(row1), str(row2), str(row3), str(row4), str(row5), str(comments)]]
+                    else:
+                        print("made it to else")
+                        session['previousInput'].append([str(workout),str(row1), str(row2), str(row3), str(row4), str(row5), str(comments)])
+                print("previousInput= ",session['previousInput'])
+                print("workoutCount!= ",session['workoutCount'])
+            elif workoutName == '':
+                badName = True
+                #workoutName = request.form['name']
+                print("workoutCount#= ",session['workoutCount'])
+                for i in range(1,session['workoutCount']):
+                    print(str(i))
+                    workout = str(request.form['workout'+str(i)])
+                    row1 = str(request.form['row1-'+str(i)])
+                    print(row1)
+                    row2 = str(request.form['row2-'+str(i)])
+                    print(row2)
+                    row3 = str(request.form['row3-'+str(i)])
+                    print(row3)
+                    row4 = str(request.form['row4-'+str(i)])
+                    print(row4)
+                    row5 = str(request.form['row5-'+str(i)])
+                    print(row5)
+                    comments = str(request.form['comments'+str(i)])
+                    print(comments)
+                    if i == 1:
+                        print("made it to if")
+                        session['previousInput'] = [[str(workout), str(row1), str(row2), str(row3), str(row4), str(row5), str(comments)]]
+                    else:
+                        print("made it to else")
+                        session['previousInput'].append([str(workout),str(row1), str(row2), str(row3), str(row4), str(row5), str(comments)])
+                print("previousInput= ",session['previousInput'])
+                print("workoutCount!= ",session['workoutCount'])
+            else:
+                badName = False
+                trainingProgramCreated = True
+
+                print("workoutCount= ",session['workoutCount'])
+                for i in range(1,session['workoutCount']):
+                    print(str(i))
+                    workout = str(request.form['workout'+str(i)])
+                    row1 = str(request.form['row1-'+str(i)])
+                    if any(c.isalpha() for c in row1):
+                        for c in row1:
+                            if c.isalpha() and c != 'x':
+                                badInput = True
+                                trainingProgramCreated = False
+                        if 'x' in row1:
+                            if row1.count('x') > 1:
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row1[0] is not None and len(row1) > 0:
+                                if row1[0] == 'x':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                                if row1[len(row1)-1] == 'x':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                        if '/' in row1:
+                            if row1.count('/') > 1:
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row1[0] is not None and len(row1) > 0:
+                                if row1[0] == '/':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                                if row1[len(row1)-1] == '/':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                    elif '/' in row1:
+                        if row1.count('/') > 1:
+                            badInput = True
+                            trainingProgramCreated = False
+                        if row1[0] is not None and len(row1) > 0:
+                            if row1[0] == '/':
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row1[len(row1)-1] == '/':
+                                badInput = True
+                                trainingProgramCreated = False
+                    elif row1 != '':
+                        badInput = True
+                        trainingProgramCreated = False
+                    print(row1)
+                    row2 = str(request.form['row2-'+str(i)])
+                    if any(c.isalpha() for c in row2):
+                        for c in row2:
+                            if c.isalpha() and c != 'x':
+                                badInput = True
+                                trainingProgramCreated = False
+                        if 'x' in row2:
+                            if row2.count('x') > 1:
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row2[0] is not None and len(row2) > 0:
+                                if row2[0] == 'x':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                                if row2[len(row2)-1] == 'x':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                        if '/' in row2:
+                            if row2.count('/') > 1:
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row2[0] is not None and len(row2) > 0:
+                                if row2[0] == '/':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                                if row2[len(row2)-1] == '/':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                    elif '/' in row2:
+                        if row2.count('/') > 1:
+                            badInput = True
+                            trainingProgramCreated = False
+                        if row2[0] is not None and len(row2) > 0:
+                            if row2[0] == '/':
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row2[len(row2)-1] == '/':
+                                badInput = True
+                                trainingProgramCreated = False
+                    elif row2 != '':
+                        badInput = True
+                        trainingProgramCreated = False
+                    row3 = str(request.form['row3-'+str(i)])
+                    if any(c.isalpha() for c in row3):
+                        for c in row3:
+                            if c.isalpha() and c != 'x':
+                                badInput = True
+                                trainingProgramCreated = False
+                        if 'x' in row3:
+                            if row3.count('x') > 1:
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row3[0] is not None and len(row3) > 0:
+                                if row3[0] == 'x':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                                if row3[len(row3)-1] == 'x':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                        if '/' in row3:
+                            if row3.count('/') > 1:
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row3[0] is not None and len(row3) > 0:
+                                if row3[0] == '/':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                                if row3[len(row3)-1] == '/':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                    elif '/' in row3:
+                        if row3.count('/') > 1:
+                            badInput = True
+                            trainingProgramCreated = False
+                        if row3[0] is not None and len(row3) > 0:
+                            if row3[0] == '/':
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row3[len(row3)-1] == '/':
+                                badInput = True
+                                trainingProgramCreated = False
+                    elif row3 != '':
+                        badInput = True
+                        trainingProgramCreated = False
+                    row4 = str(request.form['row4-'+str(i)])
+                    if any(c.isalpha() for c in row4):
+                        for c in row4:
+                            if c.isalpha() and c != 'x':
+                                badInput = True
+                                trainingProgramCreated = False
+                        if 'x' in row4:
+                            if row4.count('x') > 1:
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row4[0] is not None and len(row4) > 0:
+                                if row4[0] == 'x':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                                if row4[len(row4)-1] == 'x':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                        if '/' in row4:
+                            if row4.count('/') > 1:
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row4[0] is not None and len(row4) > 0:
+                                if row4[0] == '/':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                                if row4[len(row4)-1] == '/':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                    elif '/' in row4:
+                        if row4.count('/') > 1:
+                            badInput = True
+                            trainingProgramCreated = False
+                        if row4[0] is not None and len(row4) > 0:
+                            if row4[0] == '/':
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row4[len(row4)-1] == '/':
+                                badInput = True
+                                trainingProgramCreated = False
+                    elif row4 != '':
+                        badInput = True
+                        trainingProgramCreated = False
+                    row5 = str(request.form['row5-'+str(i)])
+                    if any(c.isalpha() for c in row5):
+                        for c in row5:
+                            if c.isalpha() and c != 'x':
+                                badInput = True
+                                trainingProgramCreated = False
+                        if 'x' in row5:
+                            if row5.count('x') > 1:
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row5[0] is not None and len(row5) > 0:
+                                if row5[0] == 'x':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                                if row5[len(row5)-1] == 'x':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                        if '/' in row5:
+                            if row5.count('/') > 1:
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row5[0] is not None and len(row5) > 0:
+                                if row5[0] == '/':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                                if row5[len(row5)-1] == '/':
+                                    badInput = True
+                                    trainingProgramCreated = False
+                    elif '/' in row5:
+                        if row5.count('/') > 1:
+                            badInput = True
+                            trainingProgramCreated = False
+                        if row5[0] is not None and len(row5) > 0:
+                            if row5[0] == '/':
+                                badInput = True
+                                trainingProgramCreated = False
+                            if row5[len(row5)-1] == '/':
+                                badInput = True
+                                trainingProgramCreated = False
+                    elif row5 != '':
+                        badInput = True
+                        trainingProgramCreated = False
+                    print(row5)
+                    comments = str(request.form['comments'+str(i)])
+                    print(comments)
+                    if i == 1:
+                        print("made it to if")
+                        session['previousInput'] = [[str(workout), str(row1), str(row2), str(row3), str(row4), str(row5), str(comments)]]
+                    else:
+                        print("made it to else")
+                        session['previousInput'].append([str(workout),str(row1), str(row2), str(row3), str(row4), str(row5), str(comments)])
+                print("previousInput= ",session['previousInput'])
+                print("workoutCount!= ",session['workoutCount'])
+                if trainingProgramCreated == True:
+                    query = "INSERT INTO training_programs (admin_id, training_program_name) VALUES (%s, '%s')" % (session['ID'],trainingProgramName)
+                    print query
+                    try:
+                        cur.execute("INSERT INTO training_programs (admin_id, training_program_name) VALUES (%s, %s)", (session['ID'],trainingProgramName))
+                    except:
+                        print("Problem inserting into training_programs")
+                        db.rollback()
+                    db.commit()  
+                
+                    for i in range(1,session['workoutCount']):
+                        print(str(i))
+                        workout = request.form['workout'+str(i)]
+                        print(workout)
+                        row1 = request.form['row1-'+str(i)]
+                        print(row1)
+                        row2 = request.form['row2-'+str(i)]
+                        print(row2)
+                        row3 = request.form['row3-'+str(i)]
+                        print(row3)
+                        row4 = request.form['row4-'+str(i)]
+                        print(row4)
+                        row5 = request.form['row5-'+str(i)]
+                        print(row5)
+                        comments = request.form['comments'+str(i)]
+                        print(comments)
+                        
+                        query = "SELECT workout_id FROM workouts WHERE workout_name = '%s'" % (workout,)
+                        print query
+                        cur.execute("SELECT workout_id FROM workouts WHERE workout_name = %s", (workout,))
+                        workoutID = cur.fetchall()
+                        query = "SELECT training_program_id FROM training_programs WHERE training_program_name = '%s'" % (trainingProgramName,)
+                        print query
+                        cur.execute("SELECT training_program_id FROM training_programs WHERE training_program_name = %s", (trainingProgramName,))
+                        trainingProgramID = cur.fetchall()
+                    
+                        print("workoutID=", workoutID)
+                        print("trainingProgramID=", trainingProgramID)
+                        
+                        #from old query...DO NOT DELETE THESE COMMENTS!
+                        #, row_1, row_2, row_3, row_4, row_5, comments) 
+                        #, '%s', '%s', '%s', '%s', '%s', '%s')
+                        #,row1,row2,row3,row4,row5,comments)
+                        query = "INSERT INTO training_program_workouts (workout_id, training_program_id) VALUES (%s, %s)" % (workoutID[0][0],trainingProgramID[0][0])
+                        print query
+                        
+                        #from old cur.execute...DO NOT DELETE THESE COMMENTS!
+                        #, row_1, row_2, row_3, row_4, row_5, comments)
+                        #, %s, %s, %s, %s, %s, %s)
+                        #,row1,row2,row3,row4,row5,comments)
+                        try:
+                            cur.execute("INSERT INTO training_program_workouts (workout_id, training_program_id) VALUES (%s, %s)", (workoutID[0][0],trainingProgramID[0][0]))
+                        except:
+                            print("Problem inserting into training_program_workouts")
+                            db.rollback()
+                        db.commit()
+                
+                print("done!")
+
+    if userType == 'admin':
+        # getting the user's first and last name(only admins)
+        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
+        names=cur.fetchall()
+        print(names)
+        
+    #user and userType are being passed to the website here. badName and workoutCreated are for error and success notification.
+    #from old render_template...DO NOT DELETE THESE COMMENTS!
+    #trainingProgramCreated = trainingProgramCreated
+    return render_template('Theme/aCreateTrainingProgram.html', user = verifiedUser, userType = userType, Name = names, badName = badName, badInput = badInput, workouts = workouts, trainingProgramCreated = trainingProgramCreated, trainingProgramName = trainingProgramName, workoutCount = session['workoutCount'], previousInput = session['previousInput'])
+#Brittany Raze wrote this----------------------------------------------------------------
+#end admin create training program page--------------------------------------------------
 
 #Chris wrote these.-----------------------------------------
 @app.route('/add_students_from_file', methods=['POST'])
@@ -1260,7 +1813,7 @@ def add_student(user_name, first_name, last_name, sport, year, email, one_rep_ma
         db = connectToDB()
         cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     
-    query = "INSERT INTO students (user_name, last_name, first_name, sport, year, email,         one_rep_max) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    query = "INSERT INTO students (user_name, last_name, first_name, sport, year, email, one_rep_max) VALUES (%s, %s, %s, %s, %s, %s, %s)"
     values = (user_name, last_name, first_name, sport, year, email, one_rep_max)
     
     try:
@@ -1337,9 +1890,9 @@ def adminAddUserPage():
                             results = []
                             for row in reader:
                                 if len(row) == 7:
-                                    print(row)
-                                    print("username=", row[0], "lname=", row[1],"fname=", row[2])
-                                    print("sport=", row[3], "yr=", row[4], "email=", row[5], "oneRepMax=", row[6])
+                                    #print(row)
+                                    #print("username=", row[0], "lname=", row[1],"fname=", row[2])
+                                    #print("sport=", row[3], "yr=", row[4], "email=", row[5], "oneRepMax=", row[6])
                                     user_name = row[0]
                                     last_name = row[1]
                                     first_name =row[2]
@@ -1350,13 +1903,15 @@ def adminAddUserPage():
                                     if ((type(user_name)==str) & (type(last_name)==str) & (type(first_name)==str) & 
                                         (type(sport)==str) & (type(year)==int) & (type(email)==str) &
                                         (type(one_rep_max)==int)):
-                                        query = "INSERT INTO students (student_id, user_name, last_name, first_name, sport, year, email, one_rep_max) VALUES (%s, %s, %s, %s, %d, %s, %d)"
-                                        values = (studentIds+1, user_name, last_name, first_name, sport, year, email, one_rep_max)
+                    #query = "INSERT INTO training_programs (admin_id, training_program_name) VALUES (%s, '%s')" % (session['ID'],trainingProgramName)
+                                        values = (user_name, last_name, first_name, sport, year, email, one_rep_max)
+                                        query = "INSERT INTO students (user_name, last_name, first_name, sport, year, email, one_rep_max) VALUES ('%s', '%s', '%s', '%s', %d, '%s', %d)" % values
                                         try:
-                                            print("asking for:", query, "with the values:", values)
+                                            print query
                                             cur.execute(query, values)
                                         except:
                                             #http://flask.pocoo.org/docs/0.10/patterns/flashing/
+                                            print("Problem inserting into database")
                                             #flash('There was a problem with the file. Adding was aborted. \n Double-check the format of the file, and that each entry follows the following format. \n "ExampleUsername, LastName, FirstName, Sport, Year, Email, One Rep Max."')
                                             #session.pop('_flashes', None)
                                             db.rollback()
@@ -1375,10 +1930,10 @@ def adminAddUserPage():
             print('browse_file wasn''t in request.files')
             
         #when user hits submit button
-        if 'submit_file' in request.form: 
-            print("You hit the file submit button!")
-        else:
-            print('something else happened')
+        #if 'submit_file' in request.form: 
+        #    print("You hit the file submit button!")
+        #else:
+        #    print('something else happened')
     #end csv part----------------------------------------------        
             
     ####################################################################################
@@ -1516,4 +2071,4 @@ def studentCalendarPage():
     
 #keep this at the bottom. We think it starts the server    
 if __name__ == '__main__':
-    app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug = True)
+    app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug = False)
