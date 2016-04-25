@@ -1340,7 +1340,7 @@ def adminViewTrainingProgramPage():
         print(names)
     
     #user, userType, names, and all data for the exercise are being passed to the website here. 
-    return render_template('Theme/aViewTrainingProgram.html', user = verifiedUser, userType = userType, Name = names, results = rows, program = trainingProgram, workoutsTable = workoutsTable, exercises = exercises, exerciseIDs = exerciseIDs)
+    return render_template('Theme/aViewTrainingProgram.html', user = verifiedUser, userType = userType, Name = names, results = rows, program = trainingProgram, workoutsTable = workoutsTable, exercises = exercises)
 #end admin view training program page--------------------------------------------------
 
 #admin create training program page------------------------------------------------------  
