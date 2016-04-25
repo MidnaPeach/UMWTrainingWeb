@@ -22,6 +22,7 @@ create extension pgcrypto;
 
 INSERT INTO users (user_name, password) VALUES
 ('mpokorny', crypt('p00d13', gen_salt('bf'))),
+('ggreene', crypt('p00d13', gen_salt('bf'))),
 ('aperkins', crypt('changeme', gen_salt('bf'))),
 ('mdesorme', crypt('derp', gen_salt('bf'))),
 ('lass', crypt('qwerty', gen_salt('bf'))),
@@ -40,6 +41,7 @@ CREATE TABLE IF NOT EXISTS admin (
 
 INSERT INTO admin (user_name, first_name, last_name, email) VALUES
 ('mpokorny', 'Michael', 'Pokorny', 'mpokorny@mail.umw.edu'),
+('ggreene', 'George', 'Greene', 'ggreene@mail.umw.edu'),
 ('mdesorme', 'Michelle', 'Desormeaux', 'mdesorme@mail.umw.edu'),
 ('aperkins', 'Ann', 'Perkins', 'aperkins@mail.umw.edu'),
 ('lass', 'Lazy', 'Ass', 'lass@mail.umw.edu');

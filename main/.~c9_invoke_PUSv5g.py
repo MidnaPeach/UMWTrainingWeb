@@ -40,8 +40,8 @@ def connectToDB():
 #login---------------------------------------------------------------------------------------------------    
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    #if 'username' in session and session['username'] != '':
-    #    return redirect(url_for('adminHome'))
+    if 'username' in session and session['username'] != '':
+        return redirect(url_for('adminHome'))
         
     session['username'] = ""
     pw = ""
@@ -1248,101 +1248,6 @@ def adminTrainingProgramsPage():
 #Brittany Raze wrote this----------------------------------------------------------------
 #end admin Training Program page---------------------------------------------------------
 
-#admin view training program page------------------------------------------------------    
-@app.route('/aViewTrainingProgram', methods=['GET', 'POST'])
-def adminViewTrainingProgramPage():
-    if 'username' in session:
-        verifiedUser = session['username']
-    else:
-        verifiedUser = ''
-    if 'userType' in session:
-        userType = session['userType']
-    else:
-        userType = ''
-    if verifiedUser == '':
-        return redirect(url_for('login'))
-    if userType == '':
-        return redirect(url_for('login'))
-    if 'username' in session:
-        verifiedUser = session['username']
-    else:
-        verifiedUser = ''
-    if 'trainingProgram' in session:
-        trainingProgram = session['trainingProgram']
-    else:
-        return redirect(url_for('adminTrainingProgramsPage'))
-    db = connectToDB()
-    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    
-    # get all data for the training program...
-    programTable  = []
-    workoutsTable = []
-    workoutIDs = []
-    workouts = []
-    exercises = []
-    rows = []
-    exerciseIDs = []
-    exercises = []
-    query = "SELECT training_program_id FROM training_programs WHERE training_program_name = '%s'" % (trainingProgram,)
-    print query
-    cur.execute("SELECT training_program_id FROM training_programs WHERE training_program_name = %s",(trainingProgram,))
-    programID = cur.fetchall()[0][0]
-    print"programID= ", programID
-   
-    query = "SELECT workout_id, day_number, week_number, day_type, workout_order FROM training_program_workouts WHERE training_program_id = '%s'" % (programID,)
-    print query
-    cur.execute("SELECT workout_id, day_number, week_number, day_type, workout_order FROM training_program_workouts WHERE training_program_id = %s",(programID,))
-    programTable = cur.fetchall()
-    print"programTable= ", programTable
-    
-    query = "SELECT workout_id FROM training_program_workouts WHERE training_program_id = '%s'" % (programID,)
-    print query
-    cur.execute("SELECT workout_id FROM training_program_workouts WHERE training_program_id = %s",(programID,))
-    workoutIDs = cur.fetchall()
-    print"workoutIDs= ", workoutIDs
-    
-    for ID in workoutIDs: 
-        query = "SELECT workout_name, workout_id FROM workouts WHERE workout_id = '%s'" % (ID[0],)
-        print query
-        cur.execute("SELECT workout_name, workout_id FROM workouts WHERE workout_id = %s",(ID[0],))
-        workoutsTable = workoutsTable + cur.fetchall()
-    print"workoutsTable= ",workoutsTable
-#
-    for ID in workoutIDs: 
-        query = "SELECT exercise_id FROM workout_exercises WHERE workout_id = '%s'" % (ID[0],)
-        print query
-        cur.execute("SELECT exercise_id FROM workout_exercises WHERE workout_id = %s",(ID[0],))
-        exerciseIDs = exerciseIDs + cur.fetchall()
-    print"exerciseIDs= ",exerciseIDs
-    
-    for ID in workoutIDs:
-        query = "SELECT workout_id, exercise_id, row_1, row_2, row_3, row_4, row_5, comments FROM workout_exercises WHERE workout_id = '%s'" % (ID[0],)
-        print query
-        cur.execute("SELECT workout_id, exercise_id, row_1, row_2, row_3, row_4, row_5, comments FROM workout_exercises WHERE workout_id = %s",(ID[0],))
-        rows = rows + cur.fetchall()
-    print"rows= ",rows
-    
-    for row in rows:
-        query = "SELECT exercise_name, exercise_id FROM exercises WHERE exercise_id = '%s'" % (row[1],)
-        print query
-        cur.execute("SELECT exercise_name, exercise_id FROM exercises WHERE exercise_id = %s",(row[1],))
-        exercises.append(cur.fetchall())
-        print"exercises= ",exercises
-    
-    
-    ## For dubugging ##
-    #print(rows[0][0])
-    
-    if userType == 'admin':
-        # getting the user's first and last name(only admins)
-        cur.execute("SELECT first_name, last_name FROM admin WHERE user_name = %s", (verifiedUser,)) #<- make sure if there is only one variable, it still needs a comma for some reason
-        names=cur.fetchall()
-        print(names)
-    
-    #user, userType, names, and all data for the exercise are being passed to the website here. 
-    return render_template('Theme/aViewTrainingProgram.html', user = verifiedUser, userType = userType, Name = names, results = rows, program = trainingProgram, workoutsTable = workoutsTable, exercises = exercises, exerciseIDs = exerciseIDs)
-#end admin view training program page--------------------------------------------------
-
 #admin create training program page------------------------------------------------------  
 #Brittany Raze wrote this----------------------------------------------------------------
 @app.route('/aCreateTrainingProgram', methods=['GET', 'POST'])
@@ -1806,7 +1711,7 @@ def adminCreateTrainingProgramPage():
 #Brittany Raze wrote this----------------------------------------------------------------
 #end admin create training program page--------------------------------------------------
 
-#Jack wrote these.---------------------------------------
+#Chris wrote these.-----------------------------------------
 @app.route('/add_students_from_file', methods=['POST'])
 def add_students_from_file():
     pass
@@ -1832,7 +1737,7 @@ def add_student(user_name, first_name, last_name, sport, year, email, one_rep_ma
         db.rollback()
         
     db.commit()
-#end functions Jack wrote----------------------------------
+#end functions Chris wrote----------------------------------
     
 #admin add user page------------------------------------------------------    
 @app.route('/aAddUser', methods=['GET', 'POST'])
@@ -1898,7 +1803,7 @@ def adminAddUserPage():
                         
                             results = []
                             for row in reader:
-                                if len(row) == 8:
+                                if len(row) == 7:
                                     #print(row)
                                     #print("username=", row[0], "lname=", row[1],"fname=", row[2])
                                     #print("sport=", row[3], "yr=", row[4], "email=", row[5], "oneRepMax=", row[6])
@@ -1909,27 +1814,22 @@ def adminAddUserPage():
                                     year = int(row[4])
                                     email = row[5]
                                     one_rep_max = int(row[6])
-                                    password = row[7] #ideally the password will be generated in another way, not just in the csv file
                                     if ((type(user_name)==str) & (type(last_name)==str) & (type(first_name)==str) & 
                                         (type(sport)==str) & (type(year)==int) & (type(email)==str) &
                                         (type(one_rep_max)==int)):
                     #query = "INSERT INTO training_programs (admin_id, training_program_name) VALUES (%s, '%s')" % (session['ID'],trainingProgramName)
-                                        
-                                        userValues = (user_name, password)
                                         values = (user_name, last_name, first_name, sport, year, email, one_rep_max)
-                                        userQuery = "INSERT INTO users (user_name, password) VALUES ('%s', crypt('%s', gen_salt('bf')))" % userValues
+                                        query = "INSERT INTO students (user_name, last_name, first_name, sport, year, email, one_rep_max) VALUES (%s, %s, %s, %s, %d, %s, %d)" % values
                                         try:
-                                            print userQuery
-                                            cur.execute(userQuery, userValues)
-                                            query = "INSERT INTO students (user_name, last_name, first_name, sport, year, email, one_rep_max) VALUES ('%s', '%s', '%s', '%s', %d, '%s', %d)" % values
-                                            print query
+                                            cur.execute(query, values)
                                             cur.execute(query, values)
                                         except:
-                                            print("Problem inserting into users database")
+                                            #http://flask.pocoo.org/docs/0.10/patterns/flashing/
+                                            print("Problem inserting into database")
                                             #flash('There was a problem with the file. Adding was aborted. \n Double-check the format of the file, and that each entry follows the following format. \n "ExampleUsername, LastName, FirstName, Sport, Year, Email, One Rep Max."')
+                                            #session.pop('_flashes', None)
                                             db.rollback()
                                         db.commit()
-                                        #http://flask.pocoo.org/docs/0.10/patterns/flashing/
                                     else:
                                         flash('There was an error in one of the fields.')
                                 else:
@@ -2085,4 +1985,4 @@ def studentCalendarPage():
     
 #keep this at the bottom. We think it starts the server    
 if __name__ == '__main__':
-    app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug = False)
+    app.run(host=os.getenv('IP', '0.0.0.0'), port=int(os.getenv('PORT', 8080)), debug = True)
